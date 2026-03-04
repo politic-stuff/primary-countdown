@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 Democratic Primary Countdowns</title>
+<title>FIGHT 2026 Democratic Primary Countdowns</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -14,12 +14,26 @@
     --card-bg: #111827;
     --card-border: #1e293b;
     --blue: #3b82f6;
-    --blue-glow: rgba(59, 130, 246, 0.15);
-    --red: #ef4444;
     --green: #22c55e;
+    --amber: #f59e0b;
     --text: #f1f5f9;
     --text-dim: #94a3b8;
     --text-muted: #64748b;
+    --search-bg: rgba(255, 255, 255, 0.05);
+    --link-icon: #64748b;
+    --link-icon-hover: #93c5fd;
+  }
+
+  [data-theme="light"] {
+    --bg: #f0f4f8;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --text: #1e293b;
+    --text-dim: #475569;
+    --text-muted: #94a3b8;
+    --search-bg: rgba(0, 0, 0, 0.04);
+    --link-icon: #94a3b8;
+    --link-icon-hover: #3b82f6;
   }
 
   body {
@@ -28,24 +42,33 @@
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
   }
 
   .bg-grid {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image:
       linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; z-index: 0;
+  }
+  [data-theme="light"] .bg-grid {
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 1.5rem 3rem;
   }
 
   header {
-    position: relative;
     text-align: center;
-    padding: 3rem 1rem 2rem;
-    z-index: 1;
+    padding: 3rem 1rem 1.5rem;
+    position: relative; z-index: 1;
   }
 
   header h1 {
@@ -64,212 +87,277 @@
     font-size: 1.05rem;
   }
 
-  .subtitle-bar {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
+  .controls {
+    display: flex; justify-content: center; align-items: center;
+    gap: 1rem; margin-top: 1rem; flex-wrap: wrap;
   }
 
-  .subtitle-bar span {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+  .tz-picker, .race-filter {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.92rem; color: var(--text-dim);
   }
 
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
+  .tz-picker select, .race-filter select {
+    background: var(--card-bg); color: var(--text);
+    border: 1px solid var(--card-border); border-radius: 8px;
+    padding: 0.35rem 0.6rem; font-family: inherit;
+    font-size: 0.92rem; cursor: pointer; outline: none;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
   }
+  .tz-picker select:focus, .race-filter select:focus { border-color: var(--blue); }
 
+  .theme-toggle {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 8px; padding: 0.35rem 0.55rem; cursor: pointer;
+    font-size: 1rem; line-height: 1; color: var(--text-dim);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .theme-toggle:hover { border-color: var(--blue); }
+
+  .search-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-top: 0.75rem; justify-content: center;
+  }
+  .search-bar input {
+    background: var(--search-bg); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 0.5rem 1rem; font-family: inherit;
+    font-size: 0.92rem; color: var(--text); width: 300px; max-width: 90vw;
+    outline: none; transition: border-color 0.2s, background 0.3s;
+  }
+  .search-bar input::placeholder { color: var(--text-muted); }
+  .search-bar input:focus { border-color: var(--blue); }
+  .search-clear {
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 1rem; padding: 0.2rem; display: none;
+  }
+  .search-clear.visible { display: block; }
+
+  .legend {
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+  }
+  .legend span {
+    display: flex; align-items: center; gap: 0.35rem;
+    font-size: 0.88rem; color: var(--text-muted);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
   .dot.upcoming { background: var(--blue); }
-  .dot.imminent { background: #f59e0b; }
+  .dot.imminent { background: var(--amber); }
   .dot.passed { background: var(--green); }
 
-  .grid {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem 1.5rem 3rem;
-  }
-
-  .card {
+  /* Hero card */
+  .hero-card {
     background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
-    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    position: relative;
-    overflow: hidden;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 20px; padding: 2rem; margin-bottom: 2rem;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(59, 130, 246, 0.08);
+    transition: background 0.3s, border-color 0.3s;
   }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--blue), #60a5fa);
-    opacity: 0.6;
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.3);
-  }
-
-  .card.passed {
-    opacity: 0.55;
-  }
-
-  .card.passed::before {
-    background: linear-gradient(90deg, var(--green), #4ade80);
-  }
-
-  .card.imminent::before {
-    background: linear-gradient(90deg, #f59e0b, #fbbf24);
-    opacity: 1;
+  .hero-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b);
     animation: pulse-bar 2s ease-in-out infinite;
   }
+  @keyframes pulse-bar { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
 
-  @keyframes pulse-bar {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+  .hero-label {
+    font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--amber); margin-bottom: 0.75rem;
   }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.75rem;
+  .hero-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem;
   }
-
-  .state-abbr {
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    color: var(--text);
+  .hero-state { font-size: 2rem; font-weight: 800; color: var(--text); }
+  .hero-weeks { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; margin-top: 0.25rem; }
+  .hero-date {
+    background: rgba(245, 158, 11, 0.12); color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 0.4rem 0.9rem; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 600;
   }
+  [data-theme="light"] .hero-date { background: rgba(245, 158, 11, 0.08); color: #d97706; border-color: rgba(245, 158, 11, 0.3); }
 
-  .state-name {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    font-weight: 400;
-    margin-top: 0.1rem;
+  .hero-state-group { margin-bottom: 0.6rem; }
+  .hero-state-name { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.15rem; }
+  .hero-candidates { margin-bottom: 0.5rem; }
+  .hero-context { font-size: 0.88rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.5rem; line-height: 1.4; }
+
+  .hero-countdown { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+  .hero-countdown .countdown-unit {
+    flex: 1; text-align: center;
+    background: rgba(0, 0, 0, 0.35); border-radius: 12px;
+    padding: 0.8rem 0.5rem; max-width: 120px;
   }
-
-  .date-badge {
-    background: rgba(59, 130, 246, 0.1);
-    color: #93c5fd;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    padding: 0.3rem 0.7rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  .card.passed .date-badge {
-    background: rgba(34, 197, 94, 0.1);
-    color: #86efac;
-    border-color: rgba(34, 197, 94, 0.2);
-  }
-
-  .countdown {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .countdown-unit {
-    flex: 1;
-    text-align: center;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    padding: 0.6rem 0.25rem;
-  }
-
-  .countdown-num {
+  [data-theme="light"] .hero-countdown .countdown-unit { background: rgba(0, 0, 0, 0.04); }
+  .hero-countdown .countdown-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1;
+    font-size: 2.2rem; font-weight: 700; color: var(--text); line-height: 1;
+  }
+  .hero-countdown .countdown-label {
+    font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.08em; margin-top: 0.3rem;
   }
 
-  .countdown-label {
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 0.25rem;
-  }
+  .hero-progress { width: 100%; height: 4px; background: rgba(255, 255, 255, 0.06); border-radius: 4px; overflow: hidden; }
+  [data-theme="light"] .hero-progress { background: rgba(0, 0, 0, 0.06); }
+  .hero-progress .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--amber), #fbbf24); transition: width 1s linear; }
 
-  .progress-track {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 4px;
-    overflow: hidden;
+  /* Sections */
+  .section { margin-bottom: 2rem; }
+  .section-title {
+    font-size: 1.1rem; font-weight: 700; color: var(--text-dim);
+    margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; gap: 0.5rem;
   }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--blue), #60a5fa);
-    transition: width 1s linear;
+  .section-count {
+    background: rgba(59, 130, 246, 0.12); color: #93c5fd;
+    font-size: 0.85rem; padding: 0.15rem 0.5rem; border-radius: 10px; font-weight: 600;
   }
+  [data-theme="light"] .section-count { background: rgba(59, 130, 246, 0.08); color: #2563eb; }
 
-  .card.passed .progress-fill {
-    background: linear-gradient(90deg, var(--green), #4ade80);
+  /* Cards */
+  .card-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.85rem;
   }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 1rem 1.15rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--blue), #60a5fa); opacity: 0.5;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+  }
+  .card.passed { opacity: 0.5; }
+  .card.passed::before { background: linear-gradient(90deg, var(--green), #4ade80); }
 
+  .card-date-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.6rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  [data-theme="light"] .card-date-header { border-bottom-color: rgba(0, 0, 0, 0.06); }
+  .card-date-text { font-size: 0.9rem; font-weight: 600; color: #93c5fd; }
+  [data-theme="light"] .card-date-text { color: #2563eb; }
+
+  .card-state-group { margin-bottom: 0.5rem; }
+  .card-state-group:last-of-type { margin-bottom: 0.6rem; }
+  .card-state { font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 0.15rem; }
+  .card-context { font-size: 0.82rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.25rem; line-height: 1.3; }
+  .card-candidates { min-height: 0; }
+
+  .candidate {
+    font-size: 0.9rem; color: var(--text-dim); line-height: 1.5;
+    display: flex; align-items: center; gap: 0.4rem;
+    flex-wrap: wrap; padding: 0.15rem 0;
+  }
+  .candidate-office { color: var(--text-muted); font-size: 0.82rem; }
+
+  .candidate-links {
+    display: inline-flex; gap: 0.45rem; margin-left: 0.2rem;
+  }
+  .candidate-links a {
+    color: var(--link-icon); text-decoration: none;
+    opacity: 0.7; transition: opacity 0.15s, color 0.15s;
+    line-height: 1; display: inline-flex; align-items: center;
+    padding: 2px;
+  }
+  .candidate-links a:hover { color: var(--link-icon-hover); opacity: 1; }
+
+  .voting-info {
+    font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;
+    margin-top: 0.3rem; display: flex; align-items: center; gap: 0.3rem;
+  }
+  .voting-info svg { flex-shrink: 0; }
+
+  .card-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 0.4rem; border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+  [data-theme="light"] .card-bottom { border-top-color: rgba(0, 0, 0, 0.05); }
+
+  .days-count { display: flex; align-items: baseline; gap: 0.3rem; }
+  .days-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem; font-weight: 700; color: var(--text); line-height: 1;
+  }
+  .days-label {
+    font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.05em; font-weight: 600;
+  }
+  .weeks-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
   .passed-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--green);
-    text-align: center;
-    padding: 1rem 0;
-    letter-spacing: 0.05em;
+    font-size: 0.9rem; font-weight: 700; color: var(--green); letter-spacing: 0.05em;
   }
+
+  /* General election */
+  .general-section { margin-top: 2.5rem; }
+  .general-section .section-title { color: var(--amber); border-bottom-color: rgba(245, 158, 11, 0.2); }
+  .general-section .section-count { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+  [data-theme="light"] .general-section .section-count { color: #d97706; }
+
+  .general-card {
+    background: var(--card-bg); border: 1px solid rgba(245, 158, 11, 0.15);
+    border-radius: 16px; padding: 1.25rem 1.5rem;
+    position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .general-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--amber), #fbbf24); opacity: 0.5;
+  }
+  .general-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .general-title { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+  .general-date-badge {
+    background: rgba(245, 158, 11, 0.1); color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    padding: 0.3rem 0.7rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+  }
+  [data-theme="light"] .general-date-badge { color: #d97706; }
+  .general-candidates { margin-bottom: 0.75rem; }
+  .general-candidate {
+    font-size: 0.95rem; color: var(--text-dim); line-height: 1.6;
+    display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+  }
+  .general-countdown { display: flex; align-items: baseline; gap: 0.4rem; }
+  .general-days-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem; font-weight: 700; color: var(--amber); line-height: 1;
+  }
+  .general-days-label { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+  .general-weeks { font-size: 0.9rem; color: var(--text-muted); margin-left: 0.5rem; }
+
+  .no-results { text-align: center; color: var(--text-muted); padding: 3rem 1rem; font-size: 0.95rem; }
 
   footer {
-    text-align: center;
-    padding: 2rem 1rem 3rem;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    position: relative;
-    z-index: 1;
+    text-align: center; padding: 2rem 1rem 3rem;
+    color: var(--text-muted); font-size: 0.88rem;
+    position: relative; z-index: 1;
   }
-
-  footer a {
-    color: var(--text-dim);
-    text-decoration: none;
-  }
-
-  footer a:hover {
-    color: var(--blue);
-  }
+  footer a { color: var(--text-dim); text-decoration: none; }
+  footer a:hover { color: var(--blue); }
 
   @media (max-width: 640px) {
-    .grid {
-      grid-template-columns: 1fr;
-      padding: 0.75rem;
-    }
-    header { padding: 2rem 1rem 1.5rem; }
-    .countdown-num { font-size: 1.3rem; }
+    .container { padding: 0 0.75rem 2rem; }
+    header { padding: 2rem 0.75rem 1rem; }
+    .hero-card { padding: 1.25rem; }
+    .hero-state { font-size: 1.5rem; }
+    .hero-countdown .countdown-num { font-size: 1.6rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .controls { gap: 0.75rem; }
+    .search-bar input { width: 100%; }
   }
 </style>
 </head>
@@ -277,142 +365,529 @@
 <div class="bg-grid"></div>
 
 <header>
-  <h1>2026 Democratic Primary Countdowns</h1>
-  <p>Live countdowns to every primary election day</p>
-  <div class="subtitle-bar">
-    <span><span class="dot upcoming"></span> Upcoming</span>
-    <span><span class="dot imminent"></span> Within 7 days</span>
-    <span><span class="dot passed"></span> Completed</span>
+  <h1>FIGHT 2026 Democratic Primary Countdowns</h1>
+  <p>Track candidates and countdowns to every primary</p>
+  <div class="controls">
+    <div class="tz-picker">
+      <label for="tz-select">Timezone:</label>
+      <select id="tz-select">
+        <option value="America/New_York">EST</option>
+        <option value="America/Chicago">CST</option>
+        <option value="America/Denver">MST</option>
+        <option value="America/Los_Angeles">PST</option>
+      </select>
+    </div>
+    <div class="race-filter">
+      <label for="race-select">Race:</label>
+      <select id="race-select">
+        <option value="all">All Races</option>
+        <option value="senate">US Senate</option>
+        <option value="house">US House</option>
+        <option value="governor">Governor</option>
+        <option value="stateleg">State Legislature</option>
+        <option value="statewide">Statewide</option>
+      </select>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">&#9790;</button>
+    <div class="legend">
+      <span><span class="dot upcoming"></span> Upcoming</span>
+      <span><span class="dot imminent"></span> Within 7 days</span>
+      <span><span class="dot passed"></span> Completed</span>
+    </div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search states, candidates, or offices...">
+    <button class="search-clear" id="search-clear">&times;</button>
   </div>
 </header>
 
-<div class="grid" id="grid"></div>
+<div class="container" id="app"></div>
 
 <footer>
   Dates sourced from <a href="https://www.ncsl.org/elections-and-campaigns/2026-state-primary-election-dates" target="_blank">NCSL</a>
   &amp; <a href="https://dcboe.org" target="_blank">DC Board of Elections</a>.
-  All times local to your browser. &middot; Updates every second.
+  &middot; Updates every second.
 </footer>
 
 <script>
+const ICONS = {
+  web: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  x: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+  ig: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+  tk: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.1a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.47z"/></svg>`,
+  ballot: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
+};
+
 const primaries = [
-  { abbr: "MS", name: "Mississippi", date: "2026-03-10" },
-  { abbr: "IL", name: "Illinois", date: "2026-03-17" },
-  { abbr: "OH", name: "Ohio", date: "2026-05-05" },
-  { abbr: "NE", name: "Nebraska", date: "2026-05-12" },
-  { abbr: "GA", name: "Georgia", date: "2026-05-19" },
-  { abbr: "PA", name: "Pennsylvania", date: "2026-05-19" },
-  { abbr: "CA", name: "California", date: "2026-06-02" },
-  { abbr: "IA", name: "Iowa", date: "2026-06-02" },
-  { abbr: "NJ", name: "New Jersey", date: "2026-06-02" },
-  { abbr: "ME", name: "Maine", date: "2026-06-09" },
-  { abbr: "DC", name: "Washington, D.C.", date: "2026-06-16" },
-  { abbr: "UT", name: "Utah", date: "2026-06-23" },
-  { abbr: "MD", name: "Maryland", date: "2026-06-23" },
-  { abbr: "NY", name: "New York", date: "2026-06-23" },
-  { abbr: "CO", name: "Colorado", date: "2026-06-30" },
-  { abbr: "MO", name: "Missouri", date: "2026-08-04" },
-  { abbr: "WA", name: "Washington", date: "2026-08-04" },
-  { abbr: "MI", name: "Michigan", date: "2026-08-04" },
-  { abbr: "TN", name: "Tennessee", date: "2026-08-06" },
-  { abbr: "WI", name: "Wisconsin", date: "2026-08-11" },
-  { abbr: "AK", name: "Alaska", date: "2026-08-18" },
-  { abbr: "FL", name: "Florida", date: "2026-08-18" },
+  { state: "Mississippi", date: "2026-03-10", context: "", earlyVote: "", mailIn: "Excuse required",
+    candidates: [
+      { name: "Evan Turnage", office: "US House, MS-2",
+        web: "https://www.evanturnage.com/", x: "https://x.com/evan_turnage", ig: "https://www.instagram.com/evan_turnage/", tk: "https://www.tiktok.com/@evanturnage" }
+    ]},
+  { state: "Illinois", date: "2026-03-17", context: "Key races in the Chicago area", earlyVote: "Feb 5", mailIn: "No-excuse",
+    candidates: [
+      { name: "Dr. Thomas Fisher", office: "US House, IL-7",
+        web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher" },
+      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)",
+        web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/" },
+      { name: "Karina Villa", office: "State Comptroller",
+        web: "https://karinavilla.com/", x: "https://x.com/Citizens4Karina", ig: "https://www.instagram.com/karinavillaforcomptroller/" }
+    ]},
+  { state: "Ohio", date: "2026-05-05", context: "Statewide judicial and AG races", earlyVote: "Apr 7", mailIn: "No-excuse",
+    candidates: [
+      { name: "John Kulewicz", office: "Attorney General",
+        web: "https://john4ohioag.com/", x: "https://x.com/JohnKulewicz" },
+      { name: "Marilyn Zayas", office: "Supreme Court Justice",
+        web: "https://judgemarilynzayas.com/", x: "https://twitter.com/vote4judgez", ig: "https://www.instagram.com/vote4judgez/" },
+      { name: "Brian Poindexter", office: "US House, OH-7",
+        web: "https://poindexterforcongress.com/", x: "https://x.com/bpforcongress", ig: "https://www.instagram.com/PoindexterForCongress/", tk: "https://www.tiktok.com/@poindexterforcongress" }
+    ]},
+  { state: "Nebraska", date: "2026-05-12", context: "Independent Senate bid in a red state", earlyVote: "~Apr 12", mailIn: "No-excuse",
+    candidates: [
+      { name: "Dan Osborn", office: "US Senate (Independent)",
+        web: "https://www.osbornforsenate.com/", x: "https://x.com/osbornforne", ig: "https://www.instagram.com/osbornforne/", tk: "https://www.tiktok.com/@osbornforne" }
+    ]},
+  { state: "Georgia", date: "2026-05-19", context: "Open seat in metro Atlanta", earlyVote: "Apr 27", mailIn: "No-excuse",
+    candidates: [
+      { name: "Emanuel Jones", office: "US House, GA-13",
+        web: "https://www.emanueljonesforcongress.com/", x: "https://twitter.com/emanueldjones" }
+    ]},
+  { state: "Pennsylvania", date: "2026-05-19", context: "Major battleground with multiple contested primaries", earlyVote: "", mailIn: "No-excuse (mail-in only)",
+    candidates: [
+      { name: "Summer Lee", office: "US House, PA-12 (incumbent)",
+        web: "https://summerforpa.com/", x: "https://twitter.com/SummerForPA", ig: "https://www.instagram.com/summerleeforpa/" },
+      { name: "Paige Cognetti", office: "US House, PA-8",
+        web: "https://paigeforpa.com/", x: "https://x.com/paigegcognetti", ig: "https://www.instagram.com/paigegcognetti/" },
+      { name: "Bob Brooks", office: "US House, PA-7",
+        web: "https://brooksforcongress.com/", x: "https://x.com/VoteBobBrooks" },
+      { name: "Jeff Warren", office: "State House, HD-137",
+        web: "https://www.jeffwarrenforpa.com/", ig: "https://www.instagram.com/jeffwarrenforpa/", tk: "https://www.tiktok.com/@jeffwarren4747" },
+      { name: "Brian Wrightson", office: "State Senate, SD-40",
+        web: "https://wrightsonforsenate.net/", x: "https://twitter.com/bwrightson", ig: "https://www.instagram.com/bwrightson/" }
+    ]},
+  { state: "California", date: "2026-06-02", context: "Marquee governor's race; top-two primary", earlyVote: "May 23", mailIn: "Auto-mailed to all voters",
+    candidates: [
+      { name: "Tom Steyer", office: "Governor",
+        web: "https://www.tomsteyer.com/", x: "https://x.com/TomSteyer", ig: "https://www.instagram.com/tomsteyer/" },
+      { name: "Randy Villegas", office: "US House, CA-22",
+        web: "https://www.villegasforcongress.com/", x: "https://x.com/Villegas_CA22", ig: "https://www.instagram.com/villegasforcongress/", tk: "https://www.tiktok.com/@villegasforcongress" },
+      { name: "Eric Jones", office: "US House, CA-4",
+        web: "https://www.ericjones.us/", x: "https://x.com/ericjones_us", ig: "https://www.instagram.com/ericjones.us/", tk: "https://www.tiktok.com/@ericjones.us" },
+      { name: "Jane Kim", office: "Insurance Commissioner",
+        web: "https://www.janekim.org/", x: "https://x.com/JaneKim", ig: "https://www.instagram.com/janekim/", tk: "https://www.tiktok.com/@janekimforca" }
+    ]},
+  { state: "New Jersey", date: "2026-06-02", context: "Competitive suburban House seat", earlyVote: "May 26", mailIn: "No-excuse",
+    candidates: [
+      { name: "Cammie Croft", office: "US House, NJ-11",
+        web: "https://cammieforcongress.com/", x: "https://x.com/cammiecroft", ig: "https://www.instagram.com/cammieforcongress/", tk: "https://www.tiktok.com/@cammieforcongress" }
+    ]},
+  { state: "Maine", date: "2026-06-09", context: "Open Senate seat opportunity", earlyVote: "~May 10", mailIn: "No-excuse",
+    candidates: [
+      { name: "Graham Platner", office: "US Senate",
+        web: "https://www.grahamforsenate.com", x: "https://x.com/grahamformaine", ig: "https://www.instagram.com/grahamformaine/", tk: "https://www.tiktok.com/@grahamformaine" }
+    ]},
+  { state: "Washington, D.C.", date: "2026-06-16", context: "Race for DC's non-voting House delegate", earlyVote: "Jun 8", mailIn: "Auto-mailed to all voters",
+    candidates: [
+      { name: "Robert White", office: "US House Delegate",
+        web: "https://www.joinrobertwhite.com/", x: "https://twitter.com/robertwhite_dc", ig: "https://www.instagram.com/robertwhite_dc/" }
+    ]},
+  { state: "Utah", date: "2026-06-23", context: "Blue candidate in a deep-red state", earlyVote: "Jun 9", mailIn: "All-mail state",
+    candidates: [
+      { name: "Nate Blouin", office: "US House, UT-1",
+        web: "https://www.nateforutah.com/", x: "https://x.com/NateForUtah", ig: "https://www.instagram.com/nateforutah/", tk: "https://www.tiktok.com/@nateforutah" }
+    ]},
+  { state: "New York", date: "2026-06-23", context: "Competitive House and statewide races", earlyVote: "Jun 13", mailIn: "No-excuse",
+    candidates: [
+      { name: "Peter Chatzky", office: "US House, NY-17",
+        web: "https://chatzkyforcongress.com/", x: "https://x.com/peterchatzky", ig: "https://www.instagram.com/chatzkyforcongress/", tk: "https://www.tiktok.com/@chatzkyforcongress" },
+      { name: "Drew Warshaw", office: "State Comptroller",
+        web: "https://www.drewwarshaw.com/", x: "https://x.com/drewforny", ig: "https://www.instagram.com/drewforny/", tk: "https://www.tiktok.com/@drewforny" },
+      { name: "Brad Lander", office: "US House, NY-10",
+        web: "https://www.bradlanderforcongress.com/", x: "https://x.com/bradlander", ig: "https://www.instagram.com/brad.lander/", tk: "https://www.tiktok.com/@bradlandernyc" },
+      { name: "Claire Valdez", office: "US House, NY-7",
+        web: "https://clairevaldezforcongress.com/", x: "https://x.com/claireforny", ig: "https://www.instagram.com/claireforny/", tk: "https://www.tiktok.com/@claireforny" }
+    ]},
+  { state: "Colorado", date: "2026-06-30", context: "AG race and flippable House seat", earlyVote: "Jun 22", mailIn: "Auto-mailed to all voters",
+    candidates: [
+      { name: "David Seligman", office: "Attorney General",
+        web: "https://www.seligmanforag.com/", x: "https://x.com/daveyseligman", ig: "https://www.instagram.com/daveyseligman/", tk: "https://www.tiktok.com/@seligman.for.ag" },
+      { name: "Eileen Laubacher", office: "US House, CO-4",
+        web: "https://www.eileenforcolorado.com/", x: "https://x.com/EileenforCO", ig: "https://www.instagram.com/eileenforcolorado/", tk: "https://www.tiktok.com/@eileenforcolorado" }
+    ]},
+  { state: "Michigan", date: "2026-08-04", context: "High-profile Senate race with Abdul El-Sayed", earlyVote: "~Jul 26", mailIn: "No-excuse",
+    candidates: [
+      { name: "Abdul El-Sayed", office: "US Senate",
+        web: "https://abdulforsenate.com/", x: "https://x.com/abdulelsayed", ig: "https://www.instagram.com/abdulelsayed/", tk: "https://www.tiktok.com/@abdulelsayed" },
+      { name: "Donavan McKinney", office: "US House, MI-13",
+        web: "https://www.donavanforcongress.com/", x: "https://x.com/DonavanMI13", ig: "https://www.instagram.com/donavanmckinney/" },
+      { name: "Justin Onwenu", office: "State Senate, SD-1",
+        web: "https://www.justinformi.com/" }
+    ]},
+  { state: "Tennessee", date: "2026-08-06", context: "Justin Pearson moves from state legislature to Congress", earlyVote: "Jul 17", mailIn: "Excuse required",
+    candidates: [
+      { name: "Justin Pearson", office: "US House, TN-9",
+        web: "https://www.votejustinj.com/", x: "https://twitter.com/justinjpearson", ig: "https://www.instagram.com/justinjpearson/", tk: "https://www.tiktok.com/@realjustinjpearson" }
+    ]},
+  { state: "Wisconsin", date: "2026-08-11", context: "Former Lt. Governor Mandela Barnes runs for Governor", earlyVote: "~Jul 28", mailIn: "No-excuse",
+    candidates: [
+      { name: "Mandela Barnes", office: "Governor",
+        web: "https://www.mandelabarnes.com/", x: "https://x.com/TheOtherMandela", ig: "https://www.instagram.com/theothermandela/", tk: "https://www.tiktok.com/@theothermandela" }
+    ]},
+  { state: "Alaska", date: "2026-08-18", context: "Open primary (top-4 advance); Governor and Senate races", earlyVote: "Aug 3", mailIn: "No-excuse",
+    candidates: [
+      { name: "Mary Peltola", office: "US Senate",
+        web: "https://marypeltola.com/", x: "https://x.com/MaryPeltola", ig: "https://www.instagram.com/marypeltola/", tk: "https://www.tiktok.com/@mary_peltola" },
+      { name: "Jonathan Kreiss-Tomkins", office: "Governor",
+        web: "https://www.jktforak.com/", x: "https://x.com/jktforak", ig: "https://www.instagram.com/jktforak/" }
+    ]},
+  { state: "Florida", date: "2026-08-18", context: "Special election for Rubio's vacated Senate seat", earlyVote: "Aug 8", mailIn: "No-excuse",
+    candidates: [
+      { name: "Hector Mujica", office: "US Senate (special)",
+        web: "https://hectormujica.com/", x: "https://x.com/HectorMujicaFL", ig: "https://www.instagram.com/hectormujicafl/", tk: "https://www.tiktok.com/@hectormujicafl" }
+    ]}
 ];
 
-// Reference start date for progress bar (Jan 1, 2026)
-const progressStart = new Date("2026-01-01T00:00:00").getTime();
+const generalElection = {
+  date: "2026-11-03",
+  candidates: [
+    { name: "Gina Hinojosa", state: "Texas", office: "Governor",
+      web: "https://ginafortexas.com/", x: "https://x.com/GinaHinojosaTX", ig: "https://www.instagram.com/ginafortexas/", tk: "https://www.tiktok.com/@ginafortexas" },
+    { name: "Greg Casar", state: "Texas", office: "US House, TX-37",
+      web: "https://www.gregcasar.com/", x: "https://x.com/GregCasar", ig: "https://www.instagram.com/gregcasar/", tk: "https://www.tiktok.com/@repcasar" }
+  ]
+};
 
-function formatDate(dateStr) {
-  const d = new Date(dateStr + "T00:00:00");
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+// Group primaries by date
+function groupByDate(entries) {
+  const groups = [], map = {};
+  entries.forEach(p => {
+    if (!map[p.date]) { map[p.date] = { date: p.date, states: [] }; groups.push(map[p.date]); }
+    map[p.date].states.push({ state: p.state, candidates: p.candidates, context: p.context, earlyVote: p.earlyVote, mailIn: p.mailIn });
+  });
+  return groups;
 }
 
-function buildCards() {
-  const grid = document.getElementById("grid");
-  primaries.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.id = `card-${i}`;
-    card.innerHTML = `
-      <div class="card-header">
-        <div>
-          <div class="state-abbr">${p.abbr}</div>
-          <div class="state-name">${p.name}</div>
-        </div>
-        <div class="date-badge">${formatDate(p.date)}</div>
-      </div>
-      <div id="countdown-${i}"></div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-${i}"></div>
+const primaryGroups = groupByDate(primaries);
+const progressStart = new Date("2026-01-01T00:00:00").getTime();
+let selectedTz = "America/New_York";
+let searchQuery = "";
+let raceFilter = "all";
+
+// Auto-detect timezone
+(function() {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tzMap = {
+      "America/New_York": "America/New_York", "America/Detroit": "America/New_York",
+      "America/Indiana/Indianapolis": "America/New_York",
+      "America/Chicago": "America/Chicago", "America/Indiana/Knox": "America/Chicago",
+      "America/Menominee": "America/Chicago",
+      "America/Denver": "America/Denver", "America/Boise": "America/Denver",
+      "America/Phoenix": "America/Denver",
+      "America/Los_Angeles": "America/Los_Angeles", "America/Anchorage": "America/Los_Angeles",
+      "Pacific/Honolulu": "America/Los_Angeles"
+    };
+    if (tzMap[tz]) selectedTz = tzMap[tz];
+    document.getElementById("tz-select").value = selectedTz;
+  } catch(e) {}
+})();
+
+// Theme
+function initTheme() {
+  const saved = localStorage.getItem("pc-theme");
+  if (saved) { document.documentElement.setAttribute("data-theme", saved); updateThemeIcon(saved); }
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "light" ? "dark" : "light";
+  if (next === "dark") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", "light");
+  localStorage.setItem("pc-theme", next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme) {
+  document.getElementById("theme-toggle").innerHTML = theme === "light" ? "&#9728;" : "&#9790;";
+}
+initTheme();
+document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+
+function getTargetTime(dateStr) {
+  const utcMidnight = new Date(dateStr + "T00:00:00Z");
+  const tzMidnight = new Date(utcMidnight.toLocaleString("en-US", { timeZone: selectedTz }));
+  return utcMidnight.getTime() + (utcMidnight.getTime() - tzMidnight.getTime());
+}
+
+function formatDateShort(dateStr) {
+  return new Date(dateStr + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+}
+function formatDateLong(dateStr) {
+  return new Date(dateStr + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+}
+function getDaysRemaining(dateStr, now) {
+  return Math.ceil((getTargetTime(dateStr) - now) / (1000 * 60 * 60 * 24));
+}
+function getMonth(dateStr) {
+  return new Date(dateStr + "T12:00:00Z").getUTCMonth();
+}
+function weeksOutText(days) {
+  if (days < 7) return "";
+  const weeks = Math.floor(days / 7);
+  return `${weeks} week${weeks !== 1 ? 's' : ''} out`;
+}
+
+function candidateMatchesRace(c) {
+  if (raceFilter === "all") return true;
+  const o = c.office.toLowerCase();
+  switch (raceFilter) {
+    case "senate": return o.includes("us senate");
+    case "house": return o.includes("us house") || o.includes("house delegate");
+    case "governor": return o.includes("governor");
+    case "stateleg": return o.includes("state house") || o.includes("state senate");
+    case "statewide": return o.includes("attorney general") || o.includes("comptroller") || o.includes("supreme court") || o.includes("insurance commissioner");
+    default: return true;
+  }
+}
+
+function renderLinks(c) {
+  let links = "";
+  if (c.web) links += `<a href="${c.web}" target="_blank" title="Website">${ICONS.web}</a>`;
+  if (c.x) links += `<a href="${c.x}" target="_blank" title="X">${ICONS.x}</a>`;
+  if (c.ig) links += `<a href="${c.ig}" target="_blank" title="Instagram">${ICONS.ig}</a>`;
+  if (c.tk) links += `<a href="${c.tk}" target="_blank" title="TikTok">${ICONS.tk}</a>`;
+  return links ? `<span class="candidate-links">${links}</span>` : "";
+}
+
+function renderCandidateList(candidates) {
+  const filtered = raceFilter === "all" ? candidates : candidates.filter(candidateMatchesRace);
+  if (filtered.length === 0 && candidates.length === 0) {
+    return `<div class="candidate" style="color: var(--text-muted); font-style: italic;">Candidates TBD</div>`;
+  }
+  if (filtered.length === 0) return "";
+  return filtered.map(c =>
+    `<div class="candidate">${c.name} <span class="candidate-office">&mdash; ${c.office}</span>${renderLinks(c)}</div>`
+  ).join("");
+}
+
+function renderVotingInfo(s, isPassed) {
+  if (isPassed) return "";
+  let parts = [];
+  if (s.earlyVote) parts.push(`Early vote: ${s.earlyVote}`);
+  if (s.mailIn) parts.push(`Mail-in: ${s.mailIn}`);
+  if (parts.length === 0) return "";
+  return `<div class="voting-info">${ICONS.ballot} ${parts.join(" · ")}</div>`;
+}
+
+function renderStatesForCard(states, isPassed) {
+  return states.map(s => {
+    const ctx = s.context ? `<div class="card-context">${s.context}</div>` : "";
+    const candidateHtml = renderCandidateList(s.candidates);
+    if (raceFilter !== "all" && !candidateHtml) return "";
+    return `
+      <div class="card-state-group">
+        <div class="card-state">${s.state}</div>
+        ${ctx}
+        <div class="card-candidates">${candidateHtml}</div>
+        ${renderVotingInfo(s, isPassed)}
       </div>
     `;
-    grid.appendChild(card);
-  });
+  }).join("");
 }
 
-function update() {
+function groupMatchesSearch(g) {
+  if (!searchQuery) return true;
+  const q = searchQuery.toLowerCase();
+  for (const s of g.states) {
+    if (s.state.toLowerCase().includes(q)) return true;
+    for (const c of s.candidates) {
+      if (c.name.toLowerCase().includes(q) || c.office.toLowerCase().includes(q)) return true;
+    }
+  }
+  return false;
+}
+
+function groupMatchesRaceFilter(g) {
+  if (raceFilter === "all") return true;
+  for (const s of g.states) {
+    if (s.candidates.some(candidateMatchesRace)) return true;
+  }
+  return false;
+}
+
+function render() {
   const now = Date.now();
+  const app = document.getElementById("app");
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
 
-  primaries.forEach((p, i) => {
-    const target = new Date(p.date + "T00:00:00").getTime();
-    const diff = target - now;
-    const card = document.getElementById(`card-${i}`);
-    const countdownEl = document.getElementById(`countdown-${i}`);
-    const progressEl = document.getElementById(`progress-${i}`);
+  let heroGroup = null;
+  const otherGroups = [];
 
-    // Progress bar
-    const totalSpan = target - progressStart;
-    const elapsed = now - progressStart;
-    const pct = Math.min(100, Math.max(0, (elapsed / totalSpan) * 100));
-    progressEl.style.width = pct + "%";
-
-    if (diff <= 0) {
-      card.classList.add("passed");
-      card.classList.remove("imminent");
-      countdownEl.innerHTML = `<div class="passed-label">PRIMARY COMPLETE</div>`;
-      progressEl.style.width = "100%";
-      return;
-    }
-
-    // Within 7 days
-    if (diff < 7 * 24 * 60 * 60 * 1000) {
-      card.classList.add("imminent");
+  for (const g of primaryGroups) {
+    const days = getDaysRemaining(g.date, now);
+    if (!heroGroup && days > 0 && groupMatchesSearch(g) && groupMatchesRaceFilter(g)) {
+      heroGroup = { ...g, days };
     } else {
-      card.classList.remove("imminent");
+      otherGroups.push({ ...g, days });
     }
+  }
 
+  const passed = [], thisMonth = [], upcoming = [], later = [];
+  otherGroups.forEach(g => {
+    const pMonth = getMonth(g.date);
+    const pYear = new Date(g.date + "T12:00:00Z").getUTCFullYear();
+    if (g.days <= 0) passed.push(g);
+    else if (pMonth === currentMonth && pYear === currentYear) thisMonth.push(g);
+    else if (g.days <= 90) upcoming.push(g);
+    else later.push(g);
+  });
+
+  let html = "";
+  let anyVisible = false;
+
+  // Hero card
+  if (heroGroup) {
+    anyVisible = true;
+    const target = getTargetTime(heroGroup.date);
+    const diff = Math.max(0, target - now);
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
+    const totalSpan = target - progressStart;
+    const elapsed = now - progressStart;
+    const pct = Math.min(100, Math.max(0, (elapsed / totalSpan) * 100));
+    const stateNames = heroGroup.states.map(s => s.state).join(", ");
+    const heroWeeks = weeksOutText(heroGroup.days);
 
-    countdownEl.innerHTML = `
-      <div class="countdown">
-        <div class="countdown-unit">
-          <div class="countdown-num">${String(days).padStart(2, '0')}</div>
-          <div class="countdown-label">Days</div>
+    const heroStatesHtml = heroGroup.states.map(s => {
+      const ctx = s.context ? `<div class="hero-context">${s.context}</div>` : "";
+      return `
+        <div class="hero-state-group">
+          <div class="hero-state-name">${s.state}</div>
+          ${ctx}
+          <div class="hero-candidates">${renderCandidateList(s.candidates)}</div>
+          ${renderVotingInfo(s, false)}
         </div>
-        <div class="countdown-unit">
-          <div class="countdown-num">${String(hours).padStart(2, '0')}</div>
-          <div class="countdown-label">Hrs</div>
+      `;
+    }).join("");
+
+    html += `
+      <div class="hero-card">
+        <div class="hero-label">Next Primary &mdash; ${formatDateLong(heroGroup.date)}</div>
+        <div class="hero-header">
+          <div>
+            <div class="hero-state">${stateNames}</div>
+            ${heroWeeks ? `<div class="hero-weeks">${heroWeeks}</div>` : ""}
+          </div>
+          <div class="hero-date">${heroGroup.days} day${heroGroup.days !== 1 ? 's' : ''} away</div>
         </div>
-        <div class="countdown-unit">
-          <div class="countdown-num">${String(minutes).padStart(2, '0')}</div>
-          <div class="countdown-label">Min</div>
+        ${heroStatesHtml}
+        <div class="hero-countdown">
+          <div class="countdown-unit"><div class="countdown-num">${String(days).padStart(2, '0')}</div><div class="countdown-label">Days</div></div>
+          <div class="countdown-unit"><div class="countdown-num">${String(hours).padStart(2, '0')}</div><div class="countdown-label">Hours</div></div>
+          <div class="countdown-unit"><div class="countdown-num">${String(minutes).padStart(2, '0')}</div><div class="countdown-label">Min</div></div>
+          <div class="countdown-unit"><div class="countdown-num">${String(seconds).padStart(2, '0')}</div><div class="countdown-label">Sec</div></div>
         </div>
-        <div class="countdown-unit">
-          <div class="countdown-num">${String(seconds).padStart(2, '0')}</div>
-          <div class="countdown-label">Sec</div>
+        <div class="hero-progress"><div class="progress-fill" style="width: ${pct}%"></div></div>
+      </div>
+    `;
+  }
+
+  function renderSection(title, groups) {
+    const visible = groups.filter(g => groupMatchesSearch(g) && groupMatchesRaceFilter(g));
+    if (visible.length === 0) return "";
+    anyVisible = true;
+    const totalStates = visible.reduce((sum, g) => sum + g.states.length, 0);
+    let s = `<div class="section">`;
+    s += `<div class="section-title">${title} <span class="section-count">${totalStates} state${totalStates !== 1 ? 's' : ''}</span></div>`;
+    s += `<div class="card-grid">`;
+    visible.forEach(g => {
+      const isPassed = g.days <= 0;
+      const weeks = weeksOutText(g.days);
+      const statesHtml = renderStatesForCard(g.states, isPassed);
+      if (raceFilter !== "all" && !statesHtml.trim()) return;
+
+      s += `<div class="card${isPassed ? ' passed' : ''}">`;
+      s += `<div class="card-date-header"><div class="card-date-text">${formatDateShort(g.date)}</div></div>`;
+      s += statesHtml;
+      s += `<div class="card-bottom">`;
+      if (isPassed) {
+        s += `<span class="passed-label">COMPLETE</span>`;
+      } else {
+        s += `<div class="days-count"><span class="days-num">${g.days}</span><span class="days-label">days</span></div>`;
+        if (weeks) s += `<span class="weeks-label">${weeks}</span>`;
+      }
+      s += `</div></div>`;
+    });
+    s += `</div></div>`;
+    return s;
+  }
+
+  html += renderSection("Completed", passed);
+  html += renderSection("This Month", thisMonth);
+  html += renderSection("Upcoming", upcoming);
+  html += renderSection("Later This Year", later);
+
+  // General Election
+  const geMatch = !searchQuery ||
+    generalElection.candidates.some(c =>
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.office.toLowerCase().includes(searchQuery.toLowerCase())
+    ) || "general election".includes(searchQuery.toLowerCase());
+
+  const geRaceMatch = raceFilter === "all" || generalElection.candidates.some(candidateMatchesRace);
+
+  if (geMatch && geRaceMatch) {
+    anyVisible = true;
+    const geDays = getDaysRemaining(generalElection.date, now);
+    const geWeeks = weeksOutText(geDays);
+    const filteredGeCands = raceFilter === "all" ? generalElection.candidates : generalElection.candidates.filter(candidateMatchesRace);
+    html += `
+      <div class="section general-section">
+        <div class="section-title">General Election <span class="section-count">${filteredGeCands.length}</span></div>
+        <div class="general-card">
+          <div class="general-header">
+            <div class="general-title">November 3, 2026</div>
+            <div class="general-date-badge">Election Day</div>
+          </div>
+          <div class="general-candidates">
+            ${filteredGeCands.map(c =>
+              `<div class="general-candidate">${c.name} <span class="candidate-office">&mdash; ${c.state}, ${c.office}</span>${renderLinks(c)}</div>`
+            ).join("")}
+          </div>
+          <div class="general-countdown">
+            <span class="general-days-num">${Math.max(0, geDays)}</span>
+            <span class="general-days-label">days until General Election</span>
+            ${geWeeks ? `<span class="general-weeks">(${geWeeks})</span>` : ""}
+          </div>
         </div>
       </div>
     `;
-  });
+  }
+
+  if (!anyVisible) html += `<div class="no-results">No results for "${searchQuery}"</div>`;
+  app.innerHTML = html;
 }
 
-buildCards();
-update();
-setInterval(update, 1000);
+// Event listeners
+document.getElementById("tz-select").addEventListener("change", function() { selectedTz = this.value; render(); });
+document.getElementById("race-select").addEventListener("change", function() { raceFilter = this.value; render(); });
+
+const searchInput = document.getElementById("search-input");
+const searchClear = document.getElementById("search-clear");
+searchInput.addEventListener("input", function() {
+  searchQuery = this.value.trim();
+  searchClear.classList.toggle("visible", searchQuery.length > 0);
+  render();
+});
+searchClear.addEventListener("click", function() {
+  searchInput.value = ""; searchQuery = "";
+  searchClear.classList.remove("visible"); render();
+});
+
+render();
+setInterval(render, 1000);
 </script>
 </body>
 </html>
