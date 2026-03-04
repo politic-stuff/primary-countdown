@@ -415,6 +415,7 @@ const ICONS = {
   x: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
   ig: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
   tk: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.1a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.47z"/></svg>`,
+  yt: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="white" d="M9.545 15.568V8.432L15.818 12z"/></svg>`,
   ballot: `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`
 };
 
@@ -422,12 +423,12 @@ const primaries = [
   { state: "Mississippi", date: "2026-03-10", context: "", earlyVote: "", mailIn: "Mail-in requires excuse",
     candidates: [
       { name: "Evan Turnage", office: "US House, MS-2",
-        web: "https://www.evanturnage.com/", x: "https://x.com/evan_turnage", ig: "https://www.instagram.com/evan_turnage/", tk: "https://www.tiktok.com/@evanturnage" }
+        web: "https://www.evanturnage.com/", x: "https://x.com/evan_turnage", ig: "https://www.instagram.com/evan_turnage/", tk: "https://www.tiktok.com/@evanturnage", yt: "https://www.youtube.com/@EvanTurnageforCongress" }
     ]},
   { state: "Illinois", date: "2026-03-17", context: "Key races in the Chicago area", earlyVote: "Feb 5", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Dr. Thomas Fisher", office: "US House, IL-7",
-        web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher" },
+        web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher", yt: "https://www.youtube.com/@Dr.ThomasFisherforCongress" },
       { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)",
         web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/" },
       { name: "Karina Villa", office: "State Comptroller",
@@ -455,7 +456,7 @@ const primaries = [
   { state: "Pennsylvania", date: "2026-05-19", context: "Major battleground with multiple contested primaries", earlyVote: "", mailIn: "Anyone can vote by mail (no early in-person)",
     candidates: [
       { name: "Summer Lee", office: "US House, PA-12 (incumbent)",
-        web: "https://summerforpa.com/", x: "https://twitter.com/SummerForPA", ig: "https://www.instagram.com/summerleeforpa/" },
+        web: "https://summerforpa.com/", x: "https://twitter.com/SummerForPA", ig: "https://www.instagram.com/summerleeforpa/", yt: "https://www.youtube.com/@repsummerlee" },
       { name: "Paige Cognetti", office: "US House, PA-8",
         web: "https://paigeforpa.com/", x: "https://x.com/paigegcognetti", ig: "https://www.instagram.com/paigegcognetti/" },
       { name: "Bob Brooks", office: "US House, PA-7",
@@ -472,19 +473,19 @@ const primaries = [
       { name: "Randy Villegas", office: "US House, CA-22",
         web: "https://www.villegasforcongress.com/", x: "https://x.com/Villegas_CA22", ig: "https://www.instagram.com/villegasforcongress/", tk: "https://www.tiktok.com/@villegasforcongress" },
       { name: "Eric Jones", office: "US House, CA-4",
-        web: "https://www.ericjones.us/", x: "https://x.com/ericjones_us", ig: "https://www.instagram.com/ericjones.us/", tk: "https://www.tiktok.com/@ericjones.us" },
+        web: "https://www.ericjones.us/", x: "https://x.com/ericjones_us", ig: "https://www.instagram.com/ericjones.us/", tk: "https://www.tiktok.com/@ericjones.us", yt: "https://www.youtube.com/@ericjones_us" },
       { name: "Jane Kim", office: "Insurance Commissioner",
         web: "https://www.janekim.org/", x: "https://x.com/JaneKim", ig: "https://www.instagram.com/janekim/", tk: "https://www.tiktok.com/@janekimforca" }
     ]},
   { state: "New Jersey", date: "2026-06-02", context: "Competitive suburban House seat", earlyVote: "May 26", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Cammie Croft", office: "US House, NJ-11",
-        web: "https://cammieforcongress.com/", x: "https://x.com/cammiecroft", ig: "https://www.instagram.com/cammieforcongress/", tk: "https://www.tiktok.com/@cammieforcongress" }
+        web: "https://cammieforcongress.com/", x: "https://x.com/cammiecroft", ig: "https://www.instagram.com/cammieforcongress/", tk: "https://www.tiktok.com/@cammieforcongress", yt: "https://www.youtube.com/@CammieForCongress" }
     ]},
   { state: "Maine", date: "2026-06-09", context: "Open Senate seat opportunity", earlyVote: "~May 10", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Graham Platner", office: "US Senate",
-        web: "https://www.grahamforsenate.com", x: "https://x.com/grahamformaine", ig: "https://www.instagram.com/grahamformaine/", tk: "https://www.tiktok.com/@grahamformaine" }
+        web: "https://www.grahamforsenate.com", x: "https://x.com/grahamformaine", ig: "https://www.instagram.com/grahamformaine/", tk: "https://www.tiktok.com/@grahamformaine", yt: "https://www.youtube.com/@grahamformaine" }
     ]},
   { state: "Washington, D.C.", date: "2026-06-16", context: "Race for DC's non-voting House delegate", earlyVote: "Jun 8", mailIn: "Auto-mailed to all voters",
     candidates: [
@@ -499,7 +500,7 @@ const primaries = [
   { state: "New York", date: "2026-06-23", context: "Competitive House and statewide races", earlyVote: "Jun 13", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Peter Chatzky", office: "US House, NY-17",
-        web: "https://chatzkyforcongress.com/", x: "https://x.com/peterchatzky", ig: "https://www.instagram.com/chatzkyforcongress/", tk: "https://www.tiktok.com/@chatzkyforcongress" },
+        web: "https://chatzkyforcongress.com/", x: "https://x.com/peterchatzky", ig: "https://www.instagram.com/chatzkyforcongress/", tk: "https://www.tiktok.com/@chatzkyforcongress", yt: "https://www.youtube.com/@ChatzkyforCongress" },
       { name: "Drew Warshaw", office: "State Comptroller",
         web: "https://www.drewwarshaw.com/", x: "https://x.com/drewforny", ig: "https://www.instagram.com/drewforny/", tk: "https://www.tiktok.com/@drewforny" },
       { name: "Brad Lander", office: "US House, NY-10",
@@ -510,16 +511,16 @@ const primaries = [
   { state: "Colorado", date: "2026-06-30", context: "AG race and flippable House seat", earlyVote: "Jun 22", mailIn: "Auto-mailed to all voters",
     candidates: [
       { name: "David Seligman", office: "Attorney General",
-        web: "https://www.seligmanforag.com/", x: "https://x.com/daveyseligman", ig: "https://www.instagram.com/daveyseligman/", tk: "https://www.tiktok.com/@seligman.for.ag" },
+        web: "https://www.seligmanforag.com/", x: "https://x.com/daveyseligman", ig: "https://www.instagram.com/daveyseligman/", tk: "https://www.tiktok.com/@seligman.for.ag", yt: "https://www.youtube.com/@seligmanforag" },
       { name: "Eileen Laubacher", office: "US House, CO-4",
         web: "https://www.eileenforcolorado.com/", x: "https://x.com/EileenforCO", ig: "https://www.instagram.com/eileenforcolorado/", tk: "https://www.tiktok.com/@eileenforcolorado" }
     ]},
   { state: "Michigan", date: "2026-08-04", context: "High-profile Senate race with Abdul El-Sayed", earlyVote: "~Jul 26", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Abdul El-Sayed", office: "US Senate",
-        web: "https://abdulforsenate.com/", x: "https://x.com/abdulelsayed", ig: "https://www.instagram.com/abdulelsayed/", tk: "https://www.tiktok.com/@abdulelsayed" },
+        web: "https://abdulforsenate.com/", x: "https://x.com/abdulelsayed", ig: "https://www.instagram.com/abdulelsayed/", tk: "https://www.tiktok.com/@abdulelsayed", yt: "https://www.youtube.com/c/abdulelsayed" },
       { name: "Donavan McKinney", office: "US House, MI-13",
-        web: "https://www.donavanforcongress.com/", x: "https://x.com/DonavanMI13", ig: "https://www.instagram.com/donavanmckinney/" },
+        web: "https://www.donavanforcongress.com/", x: "https://x.com/DonavanMI13", ig: "https://www.instagram.com/donavanmckinney/", yt: "https://www.youtube.com/@DonavanMcKinneyforCongress" },
       { name: "Justin Onwenu", office: "State Senate, SD-1",
         web: "https://www.justinformi.com/" }
     ]},
@@ -531,7 +532,7 @@ const primaries = [
   { state: "Wisconsin", date: "2026-08-11", context: "Former Lt. Governor Mandela Barnes runs for Governor", earlyVote: "~Jul 28", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Mandela Barnes", office: "Governor",
-        web: "https://www.mandelabarnes.com/", x: "https://x.com/TheOtherMandela", ig: "https://www.instagram.com/theothermandela/", tk: "https://www.tiktok.com/@theothermandela" }
+        web: "https://www.mandelabarnes.com/", x: "https://x.com/TheOtherMandela", ig: "https://www.instagram.com/theothermandela/", tk: "https://www.tiktok.com/@theothermandela", yt: "https://www.youtube.com/@theothermandela" }
     ]},
   { state: "Alaska", date: "2026-08-18", context: "Open primary (top-4 advance); Governor and Senate races", earlyVote: "Aug 3", mailIn: "Anyone can vote by mail",
     candidates: [
@@ -543,7 +544,7 @@ const primaries = [
   { state: "Florida", date: "2026-08-18", context: "Special election for Rubio's vacated Senate seat", earlyVote: "Aug 8", mailIn: "Anyone can vote by mail",
     candidates: [
       { name: "Hector Mujica", office: "US Senate (special)",
-        web: "https://hectormujica.com/", x: "https://x.com/HectorMujicaFL", ig: "https://www.instagram.com/hectormujicafl/", tk: "https://www.tiktok.com/@hectormujicafl" }
+        web: "https://hectormujica.com/", x: "https://x.com/HectorMujicaFL", ig: "https://www.instagram.com/hectormujicafl/", tk: "https://www.tiktok.com/@hectormujicafl", yt: "https://www.youtube.com/@HectorMujicaFL" }
     ]}
 ];
 
@@ -553,7 +554,7 @@ const generalElection = {
     { name: "Gina Hinojosa", state: "Texas", office: "Governor",
       web: "https://ginafortexas.com/", x: "https://x.com/GinaHinojosaTX", ig: "https://www.instagram.com/ginafortexas/", tk: "https://www.tiktok.com/@ginafortexas" },
     { name: "Greg Casar", state: "Texas", office: "US House, TX-37",
-      web: "https://www.gregcasar.com/", x: "https://x.com/GregCasar", ig: "https://www.instagram.com/gregcasar/", tk: "https://www.tiktok.com/@repcasar" }
+      web: "https://www.gregcasar.com/", x: "https://x.com/GregCasar", ig: "https://www.instagram.com/gregcasar/", tk: "https://www.tiktok.com/@repcasar", yt: "https://www.youtube.com/@repcasar" }
   ]
 };
 
@@ -654,6 +655,7 @@ function renderLinks(c) {
   if (c.x) links += `<a href="${c.x}" target="_blank" title="X">${ICONS.x}</a>`;
   if (c.ig) links += `<a href="${c.ig}" target="_blank" title="Instagram">${ICONS.ig}</a>`;
   if (c.tk) links += `<a href="${c.tk}" target="_blank" title="TikTok">${ICONS.tk}</a>`;
+  if (c.yt) links += `<a href="${c.yt}" target="_blank" title="YouTube">${ICONS.yt}</a>`;
   return links ? `<span class="candidate-links">${links}</span>` : "";
 }
 
