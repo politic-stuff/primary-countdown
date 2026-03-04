@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Democratic Primary Countdowns</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0e1a;
+    --card-bg: #111827;
+    --card-border: #1e293b;
+    --blue: #3b82f6;
+    --blue-glow: rgba(59, 130, 246, 0.15);
+    --red: #ef4444;
+    --green: #22c55e;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa, #93c5fd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  .subtitle-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .subtitle-bar span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot.upcoming { background: var(--blue); }
+  .dot.imminent { background: #f59e0b; }
+  .dot.passed { background: var(--green); }
+
+  .grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), #60a5fa);
+    opacity: 0.6;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .card.passed {
+    opacity: 0.55;
+  }
+
+  .card.passed::before {
+    background: linear-gradient(90deg, var(--green), #4ade80);
+  }
+
+  .card.imminent::before {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    opacity: 1;
+    animation: pulse-bar 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-bar {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .state-abbr {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .state-name {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-top: 0.1rem;
+  }
+
+  .date-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 0.3rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .card.passed .date-badge {
+    background: rgba(34, 197, 94, 0.1);
+    color: #86efac;
+    border-color: rgba(34, 197, 94, 0.2);
+  }
+
+  .countdown {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .countdown-unit {
+    flex: 1;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 0.6rem 0.25rem;
+  }
+
+  .countdown-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .countdown-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.25rem;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--blue), #60a5fa);
+    transition: width 1s linear;
+  }
+
+  .card.passed .progress-fill {
+    background: linear-gradient(90deg, var(--green), #4ade80);
+  }
+
+  .passed-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--green);
+    text-align: center;
+    padding: 1rem 0;
+    letter-spacing: 0.05em;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem 1rem 3rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    color: var(--blue);
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr;
+      padding: 0.75rem;
+    }
+    header { padding: 2rem 1rem 1.5rem; }
+    .countdown-num { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<header>
+  <h1>2026 Democratic Primary Countdowns</h1>
+  <p>Live countdowns to every primary election day</p>
+  <div class="subtitle-bar">
+    <span><span class="dot upcoming"></span> Upcoming</span>
+    <span><span class="dot imminent"></span> Within 7 days</span>
+    <span><span class="dot passed"></span> Completed</span>
+  </div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  Dates sourced from <a href="https://www.ncsl.org/elections-and-campaigns/2026-state-primary-election-dates" target="_blank">NCSL</a>
+  &amp; <a href="https://dcboe.org" target="_blank">DC Board of Elections</a>.
+  All times local to your browser. &middot; Updates every second.
+</footer>
+
+<script>
+const primaries = [
+  { abbr: "MS", name: "Mississippi", date: "2026-03-10" },
+  { abbr: "IL", name: "Illinois", date: "2026-03-17" },
+  { abbr: "OH", name: "Ohio", date: "2026-05-05" },
+  { abbr: "NE", name: "Nebraska", date: "2026-05-12" },
+  { abbr: "GA", name: "Georgia", date: "2026-05-19" },
+  { abbr: "PA", name: "Pennsylvania", date: "2026-05-19" },
+  { abbr: "CA", name: "California", date: "2026-06-02" },
+  { abbr: "IA", name: "Iowa", date: "2026-06-02" },
+  { abbr: "NJ", name: "New Jersey", date: "2026-06-02" },
+  { abbr: "ME", name: "Maine", date: "2026-06-09" },
+  { abbr: "DC", name: "Washington, D.C.", date: "2026-06-16" },
+  { abbr: "UT", name: "Utah", date: "2026-06-23" },
+  { abbr: "MD", name: "Maryland", date: "2026-06-23" },
+  { abbr: "NY", name: "New York", date: "2026-06-23" },
+  { abbr: "CO", name: "Colorado", date: "2026-06-30" },
+  { abbr: "MO", name: "Missouri", date: "2026-08-04" },
+  { abbr: "WA", name: "Washington", date: "2026-08-04" },
+  { abbr: "MI", name: "Michigan", date: "2026-08-04" },
+  { abbr: "TN", name: "Tennessee", date: "2026-08-06" },
+  { abbr: "WI", name: "Wisconsin", date: "2026-08-11" },
+  { abbr: "AK", name: "Alaska", date: "2026-08-18" },
+  { abbr: "FL", name: "Florida", date: "2026-08-18" },
+];
+
+// Reference start date for progress bar (Jan 1, 2026)
+const progressStart = new Date("2026-01-01T00:00:00").getTime();
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function buildCards() {
+  const grid = document.getElementById("grid");
+  primaries.forEach((p, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.id = `card-${i}`;
+    card.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="state-abbr">${p.abbr}</div>
+          <div class="state-name">${p.name}</div>
+        </div>
+        <div class="date-badge">${formatDate(p.date)}</div>
+      </div>
+      <div id="countdown-${i}"></div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-${i}"></div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function update() {
+  const now = Date.now();
+
+  primaries.forEach((p, i) => {
+    const target = new Date(p.date + "T00:00:00").getTime();
+    const diff = target - now;
+    const card = document.getElementById(`card-${i}`);
+    const countdownEl = document.getElementById(`countdown-${i}`);
+    const progressEl = document.getElementById(`progress-${i}`);
+
+    // Progress bar
+    const totalSpan = target - progressStart;
+    const elapsed = now - progressStart;
+    const pct = Math.min(100, Math.max(0, (elapsed / totalSpan) * 100));
+    progressEl.style.width = pct + "%";
+
+    if (diff <= 0) {
+      card.classList.add("passed");
+      card.classList.remove("imminent");
+      countdownEl.innerHTML = `<div class="passed-label">PRIMARY COMPLETE</div>`;
+      progressEl.style.width = "100%";
+      return;
+    }
+
+    // Within 7 days
+    if (diff < 7 * 24 * 60 * 60 * 1000) {
+      card.classList.add("imminent");
+    } else {
+      card.classList.remove("imminent");
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    countdownEl.innerHTML = `
+      <div class="countdown">
+        <div class="countdown-unit">
+          <div class="countdown-num">${String(days).padStart(2, '0')}</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num">${String(hours).padStart(2, '0')}</div>
+          <div class="countdown-label">Hrs</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num">${String(minutes).padStart(2, '0')}</div>
+          <div class="countdown-label">Min</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-num">${String(seconds).padStart(2, '0')}</div>
+          <div class="countdown-label">Sec</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+buildCards();
+update();
+setInterval(update, 1000);
+</script>
+</body>
+</html>
