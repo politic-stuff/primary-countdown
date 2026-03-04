@@ -624,8 +624,8 @@ function getMonth(dateStr) {
   return new Date(dateStr + "T12:00:00Z").getUTCMonth();
 }
 function weeksOutText(days) {
-  if (days < 7) return "";
-  const weeks = Math.floor(days / 7);
+  if (days <= 0) return "";
+  const weeks = Math.ceil(days / 7);
   return `${weeks} week${weeks !== 1 ? 's' : ''} out`;
 }
 
