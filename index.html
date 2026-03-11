@@ -724,8 +724,24 @@ function updateThemeIcon(theme) {
 initTheme();
 document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
 
-// ?showLost=true to reveal eliminated candidates
-if (new URLSearchParams(window.location.search).get("showLost") === "true") showEliminated = true;
+// Click the "Completed" legend dot 5 times to toggle showing eliminated candidates
+(function() {
+  const dots = document.querySelectorAll(".legend .dot.passed");
+  if (!dots.length) return;
+  const target = dots[0].parentElement;
+  let clicks = 0, timer;
+  target.style.cursor = "default";
+  target.addEventListener("click", function() {
+    clicks++;
+    clearTimeout(timer);
+    if (clicks === 5) {
+      clicks = 0;
+      showEliminated = !showEliminated;
+      render();
+    }
+    timer = setTimeout(() => { clicks = 0; }, 800);
+  });
+})();
 
 function getTargetTime(dateStr) {
   const utcMidnight = new Date(dateStr + "T00:00:00Z");
@@ -804,7 +820,7 @@ function renderStatesForCard(states, isPassed) {
   return states.map(s => {
     const ctx = s.context ? `<div class="card-context">${s.context}</div>` : "";
     const candidateHtml = renderCandidateList(s.candidates);
-    if (raceFilter !== "all" && !candidateHtml) return "";
+    if (!candidateHtml) return "";
     return `
       <div class="card-state-group" data-state="${s.state}">
         <div class="card-state">${s.state}</div>
@@ -821,7 +837,8 @@ function groupMatchesSearch(g) {
   const q = searchQuery.toLowerCase();
   for (const s of g.states) {
     if (s.state.toLowerCase().includes(q)) return true;
-    for (const c of s.candidates) {
+    const visibleCandidates = showEliminated ? s.candidates : s.candidates.filter(c => !c.eliminated);
+    for (const c of visibleCandidates) {
       if (c.name.toLowerCase().includes(q) || c.office.toLowerCase().includes(q)) return true;
     }
   }
@@ -831,7 +848,16 @@ function groupMatchesSearch(g) {
 function groupMatchesRaceFilter(g) {
   if (raceFilter === "all") return true;
   for (const s of g.states) {
-    if (s.candidates.some(candidateMatchesRace)) return true;
+    const visible = showEliminated ? s.candidates : s.candidates.filter(c => !c.eliminated);
+    if (visible.some(candidateMatchesRace)) return true;
+  }
+  return false;
+}
+
+function groupHasVisibleCandidates(g) {
+  for (const s of g.states) {
+    const visible = showEliminated ? s.candidates : s.candidates.filter(c => !c.eliminated);
+    if (visible.length > 0) return true;
   }
   return false;
 }
@@ -847,7 +873,7 @@ function render() {
 
   for (const g of primaryGroups) {
     const days = getDaysRemaining(g.date, now);
-    if (!heroGroup && days > 0 && groupMatchesSearch(g) && groupMatchesRaceFilter(g)) {
+    if (!heroGroup && days > 0 && groupMatchesSearch(g) && groupMatchesRaceFilter(g) && groupHasVisibleCandidates(g)) {
       heroGroup = { ...g, days };
     } else {
       otherGroups.push({ ...g, days });
@@ -917,10 +943,15 @@ function render() {
   }
 
   function renderSection(title, groups) {
-    const visible = groups.filter(g => groupMatchesSearch(g) && groupMatchesRaceFilter(g));
+    const visible = groups.filter(g => groupMatchesSearch(g) && groupMatchesRaceFilter(g) && groupHasVisibleCandidates(g));
     if (visible.length === 0) return "";
     anyVisible = true;
-    const totalStates = visible.reduce((sum, g) => sum + g.states.length, 0);
+    const totalStates = visible.reduce((sum, g) => {
+      return sum + g.states.filter(s => {
+        const vc = showEliminated ? s.candidates : s.candidates.filter(c => !c.eliminated);
+        return vc.length > 0;
+      }).length;
+    }, 0);
     let s = `<div class="section">`;
     s += `<div class="section-title">${title} <span class="section-count">${totalStates} state${totalStates !== 1 ? 's' : ''}</span></div>`;
     s += `<div class="card-grid">`;
@@ -928,7 +959,7 @@ function render() {
       const isPassed = g.days <= 0;
       const weeks = weeksOutText(g.days);
       const statesHtml = renderStatesForCard(g.states, isPassed);
-      if (raceFilter !== "all" && !statesHtml.trim()) return;
+      if (!statesHtml.trim()) return;
 
       s += `<div class="card${isPassed ? ' passed' : ''}">`;
       s += `<div class="card-date-header"><div class="card-date-text">${formatDateShort(g.date)}</div></div>`;
