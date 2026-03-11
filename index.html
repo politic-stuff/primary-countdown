@@ -1070,6 +1070,8 @@ function updateMap() {
   primaries.forEach(p => {
     const abbr = STATE_ABBREV[p.state];
     if (!abbr) return;
+    const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
+    if (visibleCands.length === 0) return;
     const days = getDaysRemaining(p.date, now);
     let color;
     if (days <= 0) color = "var(--map-completed)";
@@ -1085,11 +1087,15 @@ function updateMap() {
     }
   });
 
-  // Color general election states (only if not already a primary state)
+  // Color general election states (only if not already a primary state with visible candidates)
   generalElection.candidates.forEach(c => {
     const abbr = STATE_ABBREV[c.state];
     if (!abbr) return;
-    const alreadyPrimary = primaries.some(p => STATE_ABBREV[p.state] === abbr);
+    const alreadyPrimary = primaries.some(p => {
+      if (STATE_ABBREV[p.state] !== abbr) return false;
+      const vc = showEliminated ? p.candidates : p.candidates.filter(x => !x.eliminated);
+      return vc.length > 0;
+    });
     if (alreadyPrimary) return;
     const el = mapSvg.getElementById(abbr);
     if (el) { el.style.fill = "var(--map-general)"; el.classList.add("tracked"); }
@@ -1101,13 +1107,14 @@ function getStateInfo(stateName) {
   // Check primaries
   for (const p of primaries) {
     if (p.state === stateName) {
+      const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
+      if (visibleCands.length === 0) break;
       const days = getDaysRemaining(p.date, Date.now());
-      const candCount = p.candidates.length;
       return {
         state: p.state,
         date: formatDateLong(p.date),
         days,
-        candidates: candCount,
+        candidates: visibleCands.length,
         type: "primary"
       };
     }
