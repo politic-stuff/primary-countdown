@@ -540,7 +540,7 @@ const ICONS = {
 const primaries = [
   { state: "Mississippi", date: "2026-03-10", context: "", earlyVote: "", mailIn: "Mail-in requires excuse",
     candidates: [
-      { name: "Evan Turnage", office: "US House, MS-2",
+      { name: "Evan Turnage", office: "US House, MS-2", eliminated: true,
         web: "https://www.evanturnage.com/", x: "https://x.com/evan_turnage", ig: "https://www.instagram.com/evan_turnage/", tk: "https://www.tiktok.com/@evanturnage", yt: "https://www.youtube.com/@EvanTurnageforCongress", fb: "https://www.facebook.com/evanturnageMS" }
     ]},
   { state: "Illinois", date: "2026-03-17", context: "Key races in the Chicago area", earlyVote: "Feb 5", mailIn: "Anyone can vote by mail",
@@ -684,6 +684,7 @@ const progressStart = new Date("2026-01-01T00:00:00").getTime();
 let selectedTz = "America/New_York";
 let searchQuery = "";
 let raceFilter = "all";
+let showEliminated = false;
 
 // Auto-detect timezone
 (function() {
@@ -722,6 +723,9 @@ function updateThemeIcon(theme) {
 }
 initTheme();
 document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
+
+// ?showLost=true to reveal eliminated candidates
+if (new URLSearchParams(window.location.search).get("showLost") === "true") showEliminated = true;
 
 function getTargetTime(dateStr) {
   const utcMidnight = new Date(dateStr + "T00:00:00Z");
@@ -772,7 +776,12 @@ function renderLinks(c) {
 }
 
 function renderCandidateList(candidates) {
-  const filtered = raceFilter === "all" ? candidates : candidates.filter(candidateMatchesRace);
+  let filtered = raceFilter === "all" ? candidates : candidates.filter(candidateMatchesRace);
+  if (!showEliminated) filtered = filtered.filter(c => !c.eliminated);
+  const visibleNonEliminated = candidates.filter(c => !c.eliminated);
+  if (filtered.length === 0 && visibleNonEliminated.length === 0 && candidates.length > 0) {
+    return ""; // all candidates eliminated, hide state entirely
+  }
   if (filtered.length === 0 && candidates.length === 0) {
     return `<div class="candidate" style="color: var(--text-muted); font-style: italic;">Candidates TBD</div>`;
   }
