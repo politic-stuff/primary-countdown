@@ -22,7 +22,6 @@
     --search-bg: rgba(255, 255, 255, 0.05);
     --link-icon: #64748b;
     --link-icon-hover: #93c5fd;
-    --map-completed: #4b5563;
     --map-default: #3b82f6;
     --map-imminent: #ef4444;
     --map-general: #8b5cf6;
@@ -513,8 +512,7 @@
   <div class="map-legend">
     <span><span class="mdot" style="background:var(--map-default)"></span> Primary</span>
     <span><span class="mdot" style="background:var(--map-imminent)"></span> Within 30 days</span>
-    <span><span class="mdot" style="background:var(--map-completed)"></span> Completed</span>
-    <span><span class="mdot" style="background:var(--map-general)"></span> General only</span>
+    <span><span class="mdot" style="background:var(--map-general)"></span> Won Primary</span>
   </div>
 </div>
 
@@ -547,7 +545,7 @@ const primaries = [
     candidates: [
       { name: "Dr. Thomas Fisher", office: "US House, IL-7", eliminated: true,
         web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher", yt: "https://www.youtube.com/@Dr.ThomasFisherforCongress", fb: "https://www.facebook.com/profile.php?id=61583976170394" },
-      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)", eliminated: false,
+      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)", eliminated: true,
         web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/", fb: "https://www.facebook.com/DeliaRamirezIL" },
       { name: "Karina Villa", office: "State Comptroller", eliminated: true,
         web: "https://karinavilla.com/", x: "https://x.com/Citizens4Karina", ig: "https://www.instagram.com/karinavillaforcomptroller/", fb: "https://www.facebook.com/Karinaforsenate/" }
@@ -1079,9 +1077,9 @@ function updateMap() {
     const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
     if (visibleCands.length === 0) return;
     const days = getDaysRemaining(p.date, now);
+    if (days <= 0) return; // Skip completed primaries — winners show as general election
     let color;
-    if (days <= 0) color = "var(--map-completed)";
-    else if (days <= 30) color = "var(--map-imminent)";
+    if (days <= 30) color = "var(--map-imminent)";
     else color = "var(--map-default)";
 
     const el = mapSvg.getElementById(abbr);
