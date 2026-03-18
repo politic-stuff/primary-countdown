@@ -545,11 +545,11 @@ const primaries = [
     ]},
   { state: "Illinois", date: "2026-03-17", context: "Key races in the Chicago area", earlyVote: "Feb 5", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "Dr. Thomas Fisher", office: "US House, IL-7",
+      { name: "Dr. Thomas Fisher", office: "US House, IL-7", eliminated: true,
         web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher", yt: "https://www.youtube.com/@Dr.ThomasFisherforCongress", fb: "https://www.facebook.com/profile.php?id=61583976170394" },
-      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)",
+      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)", eliminated: false,
         web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/", fb: "https://www.facebook.com/DeliaRamirezIL" },
-      { name: "Karina Villa", office: "State Comptroller",
+      { name: "Karina Villa", office: "State Comptroller", eliminated: true,
         web: "https://karinavilla.com/", x: "https://x.com/Citizens4Karina", ig: "https://www.instagram.com/karinavillaforcomptroller/", fb: "https://www.facebook.com/Karinaforsenate/" }
     ]},
   { state: "Ohio", date: "2026-05-05", context: "Statewide judicial and AG races", earlyVote: "Apr 7", mailIn: "Anyone can vote by mail",
@@ -665,7 +665,11 @@ const generalElection = {
     { name: "Gina Hinojosa", state: "Texas", office: "Governor",
       web: "https://ginafortexas.com/", x: "https://x.com/GinaHinojosaTX", ig: "https://www.instagram.com/ginafortexas/", tk: "https://www.tiktok.com/@ginafortexas", fb: "https://www.facebook.com/GinaForTexas/" },
     { name: "Greg Casar", state: "Texas", office: "US House, TX-37",
-      web: "https://www.gregcasar.com/", x: "https://x.com/GregCasar", ig: "https://www.instagram.com/gregcasar/", tk: "https://www.tiktok.com/@repcasar", yt: "https://www.youtube.com/@repcasar", fb: "https://www.facebook.com/repcasar/" }
+      web: "https://www.gregcasar.com/", x: "https://x.com/GregCasar", ig: "https://www.instagram.com/gregcasar/", tk: "https://www.tiktok.com/@repcasar", yt: "https://www.youtube.com/@repcasar", fb: "https://www.facebook.com/repcasar/" },
+    { name: "Juliana Stratton", state: "Illinois", office: "US Senate",
+      web: "https://www.julianastratton.com/", x: "https://x.com/JulianaStratton", ig: "https://www.instagram.com/julianastratton/", fb: "https://www.facebook.com/JulianaForIL/" },
+    { name: "Delia Ramirez", state: "Illinois", office: "US House, IL-3",
+      web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/", fb: "https://www.facebook.com/DeliaRamirezIL" }
   ]
 };
 
@@ -977,7 +981,9 @@ function render() {
     return s;
   }
 
-  html += renderSection("Completed", passed);
+  if (showEliminated) {
+    html += renderSection("Completed", passed);
+  }
   html += renderSection("This Month", thisMonth);
   html += renderSection("Upcoming", upcoming);
   html += renderSection("Later This Year", later);
