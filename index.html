@@ -362,7 +362,8 @@
   .map-section.collapsed { display: none; }
   .map-container { position: relative; }
   .map-svg { width: 100%; height: auto; display: block; }
-  .map-svg path { fill: var(--map-untracked); stroke: var(--bg); stroke-width: 1.5; transition: fill 0.2s, filter 0.2s; }
+  .map-svg path { fill: var(--map-untracked); stroke: var(--bg); stroke-width: 1.5; transition: fill 0.2s, filter 0.2s, stroke 0.3s; }
+  [data-theme="light"] .map-svg path { stroke: #1e293b; stroke-width: 1; }
   .map-svg path.tracked { cursor: pointer; }
   .map-svg path.tracked:hover { filter: brightness(1.25); }
   .map-svg circle.tracked { cursor: pointer; }
