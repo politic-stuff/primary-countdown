@@ -319,7 +319,11 @@
     color: var(--amber); background: rgba(245, 158, 11, 0.12);
     padding: 0.1rem 0.45rem; border-radius: 999px;
   }
-  .winner-note { font-size: 0.72rem; color: var(--text-muted); font-style: italic; }
+  .winner-note { font-size: 0.72rem; color: var(--text-muted); font-style: italic; margin-left: 0.45rem; }
+  .general-pending {
+    margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px dashed var(--card-border);
+    font-size: 0.82rem; color: var(--text-muted); font-style: italic;
+  }
 
   /* General election */
   .general-section { margin-top: 2.5rem; }
@@ -1032,60 +1036,62 @@ function render() {
     return s;
   }
 
-  // Completed primaries stay on the site — winner only (losing candidates drop off).
-  // A race whose polls have closed but whose result isn't recorded yet shows "Results pending".
-  function renderCompleted(groups) {
-    const sorted = groups.slice().sort((a, b) => b.pollCloseMs - a.pollCloseMs); // most recent first
-    const q = searchQuery.toLowerCase();
-    let cards = "", count = 0;
-    sorted.forEach(g => {
-      g.states.forEach(st => {
-        const anyResult = st.candidates.some(c => c.result);
-        let show = anyResult ? st.candidates.filter(c => c.result === "won") : st.candidates.slice();
-        if (raceFilter !== "all") show = show.filter(candidateMatchesRace);
-        if (show.length === 0) return; // our tracked candidate(s) lost -> nothing to show for this state
-        if (searchQuery && !(st.state.toLowerCase().includes(q) ||
-            show.some(c => c.name.toLowerCase().includes(q) || c.office.toLowerCase().includes(q)))) return;
-        const pending = !anyResult;
-        count++;
-        const candHtml = show.map(c => {
-          const note = c.resultNote ? `<span class="winner-note">${c.resultNote}</span>` : "";
-          const badge = pending
-            ? `<span class="result-pending">Results pending</span>`
-            : `<span class="result-won">&#10003; Won &middot; advancing to November</span>`;
-          return `<div class="candidate">${c.name} <span class="candidate-office">&mdash; ${c.office}</span>${renderLinks(c)}<div class="result-line">${badge}${note}</div></div>`;
-        }).join("");
-        cards += `<div class="card passed">` +
-          `<div class="card-date-header"><div class="card-date-text">${formatDateShort(g.date)}</div></div>` +
-          `<div class="card-state-group"><div class="card-state">${st.state}</div><div class="card-candidates">${candHtml}</div></div>` +
-          `<div class="card-bottom"><span class="passed-label">${pending ? "POLLS CLOSED" : "COMPLETE"}</span></div></div>`;
-      });
+  // Primary winners advance straight into the General Election card below (no separate
+  // "Completed" section — that just duplicated who's already in November). Winner = result "won";
+  // losing candidates drop off. A race that has closed but isn't called yet is shown as pending.
+  const primaryWinners = [];
+  const pendingRaces = [];
+  primaries.forEach(p => {
+    const closed = now >= pollCloseMs(p);
+    const anyResult = p.candidates.some(c => c.result);
+    p.candidates.forEach(c => {
+      if (c.result === "won") {
+        primaryWinners.push({ name: c.name, state: p.state, office: c.office, resultNote: c.resultNote,
+          web: c.web, x: c.x, ig: c.ig, tk: c.tk, yt: c.yt, fb: c.fb });
+      }
     });
-    if (count === 0) return "";
-    anyVisible = true;
-    return `<div class="section"><div class="section-title">Completed <span class="section-count">${count} race${count !== 1 ? 's' : ''}</span></div><div class="card-grid">${cards}</div></div>`;
-  }
+    if (closed && !anyResult) p.candidates.forEach(c => pendingRaces.push({ name: c.name, state: p.state }));
+  });
 
   html += renderSection("This Month", thisMonth);
   html += renderSection("Upcoming", upcoming);
   html += renderSection("Later This Year", later);
-  html += renderCompleted(passed);
 
-  // General Election
+  // General Election — curated November candidates + primary winners who advanced (deduped by name)
+  const geSeen = new Set();
+  const geAll = [];
+  [...generalElection.candidates, ...primaryWinners].forEach(c => {
+    const key = c.name.toLowerCase();
+    if (geSeen.has(key)) return;
+    geSeen.add(key);
+    geAll.push(c);
+  });
+
   const geMatch = !searchQuery ||
-    generalElection.candidates.some(c =>
+    geAll.some(c =>
       c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.office.toLowerCase().includes(searchQuery.toLowerCase())
     ) || "general election".includes(searchQuery.toLowerCase());
 
-  const geRaceMatch = raceFilter === "all" || generalElection.candidates.some(candidateMatchesRace);
+  const geRaceMatch = raceFilter === "all" || geAll.some(candidateMatchesRace);
 
   if (geMatch && geRaceMatch) {
     anyVisible = true;
     const geDays = getDaysRemaining(GE_POLL_CLOSE, now);
     const geWeeks = weeksOutText(geDays);
-    const filteredGeCands = raceFilter === "all" ? generalElection.candidates : generalElection.candidates.filter(candidateMatchesRace);
+    let filteredGeCands = raceFilter === "all" ? geAll : geAll.filter(candidateMatchesRace);
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filteredGeCands = filteredGeCands.filter(c =>
+        c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q) || c.office.toLowerCase().includes(q));
+    }
+    filteredGeCands = filteredGeCands.slice().sort((a, b) =>
+      a.state.localeCompare(b.state) || a.name.localeCompare(b.name));
+    // Footnote for races whose polls closed but whose winner isn't called yet (only when unfiltered)
+    const pendingHtml = (pendingRaces.length && raceFilter === "all" && !searchQuery)
+      ? `<div class="general-pending">&#8987; Awaiting primary results: ${pendingRaces.map(r => `${r.name} (${r.state})`).join(", ")}</div>`
+      : "";
     html += `
       <div class="section general-section">
         <div class="section-title">General Election <span class="section-count">${filteredGeCands.length}</span></div>
@@ -1096,9 +1102,10 @@ function render() {
           </div>
           <div class="general-candidates">
             ${filteredGeCands.map(c =>
-              `<div class="general-candidate">${c.name} <span class="candidate-office">&mdash; ${c.state}, ${c.office}</span>${renderLinks(c)}</div>`
+              `<div class="general-candidate">${c.name} <span class="candidate-office">&mdash; ${c.state}, ${c.office}</span>${renderLinks(c)}${c.resultNote ? `<span class="winner-note">${c.resultNote}</span>` : ""}</div>`
             ).join("")}
           </div>
+          ${pendingHtml}
           <div class="general-countdown">
             <span class="general-days-num">${Math.max(0, geDays)}</span>
             <span class="general-days-label">days until General Election</span>
