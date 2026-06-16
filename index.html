@@ -242,7 +242,7 @@
     box-shadow: 0 6px 24px rgba(59, 130, 246, 0.08);
     border-color: rgba(59, 130, 246, 0.25);
   }
-  .card.passed { opacity: 0.5; }
+  .card.passed { opacity: 0.8; }
   .card.passed::before { background: linear-gradient(90deg, var(--green), #4ade80); }
 
   .card-date-header {
@@ -304,6 +304,19 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.9rem; font-weight: 700; color: var(--green); letter-spacing: 0.05em;
   }
+  .card.passed .candidate { opacity: 1; }
+  .result-line { margin-top: 0.2rem; display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .result-won {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--green); background: rgba(34, 197, 94, 0.12);
+    padding: 0.1rem 0.45rem; border-radius: 999px;
+  }
+  .result-pending {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+    color: var(--amber); background: rgba(245, 158, 11, 0.12);
+    padding: 0.1rem 0.45rem; border-radius: 999px;
+  }
+  .winner-note { font-size: 0.72rem; color: var(--text-muted); font-style: italic; }
 
   /* General election */
   .general-section { margin-top: 2.5rem; }
@@ -539,62 +552,62 @@ const ICONS = {
 const primaries = [
   { state: "Mississippi", date: "2026-03-10", context: "", earlyVote: "", mailIn: "Mail-in requires excuse",
     candidates: [
-      { name: "Evan Turnage", office: "US House, MS-2", eliminated: true,
+      { name: "Evan Turnage", office: "US House, MS-2", result: "lost",
         web: "https://www.evanturnage.com/", x: "https://x.com/evan_turnage", ig: "https://www.instagram.com/evan_turnage/", tk: "https://www.tiktok.com/@evanturnage", yt: "https://www.youtube.com/@EvanTurnageforCongress", fb: "https://www.facebook.com/evanturnageMS" }
     ]},
   { state: "Illinois", date: "2026-03-17", context: "Key races in the Chicago area", earlyVote: "Feb 5", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "Dr. Thomas Fisher", office: "US House, IL-7", eliminated: true,
+      { name: "Dr. Thomas Fisher", office: "US House, IL-7", result: "lost",
         web: "https://thomasfisherforcongress.com/", x: "https://x.com/drthomasfisher", ig: "https://www.instagram.com/dr.thomasfisherforcongress/", tk: "https://www.tiktok.com/@drthomasfisher", yt: "https://www.youtube.com/@Dr.ThomasFisherforCongress", fb: "https://www.facebook.com/profile.php?id=61583976170394" },
-      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)", eliminated: true,
+      { name: "Delia Ramirez", office: "US House, IL-3 (incumbent)", result: "won",
         web: "https://www.deliaforcongress.com/", x: "https://x.com/deliaramirezil", ig: "https://www.instagram.com/deliaramirezil/", fb: "https://www.facebook.com/DeliaRamirezIL" },
-      { name: "Karina Villa", office: "State Comptroller", eliminated: true,
+      { name: "Karina Villa", office: "State Comptroller", result: "lost",
         web: "https://karinavilla.com/", x: "https://x.com/Citizens4Karina", ig: "https://www.instagram.com/karinavillaforcomptroller/", fb: "https://www.facebook.com/Karinaforsenate/" }
     ]},
   { state: "Ohio", date: "2026-05-05", context: "Statewide judicial and AG races", earlyVote: "Apr 7", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "John Kulewicz", office: "Attorney General",
+      { name: "John Kulewicz", office: "Attorney General", result: "won",
         web: "https://john4ohioag.com/", x: "https://x.com/JohnKulewicz", fb: "https://www.facebook.com/profile.php?id=61580274795926" },
-      { name: "Brian Poindexter", office: "US House, OH-7",
+      { name: "Brian Poindexter", office: "US House, OH-7", result: "won",
         web: "https://poindexterforcongress.com/", x: "https://x.com/bpforcongress", ig: "https://www.instagram.com/PoindexterForCongress/", tk: "https://www.tiktok.com/@poindexterforcongress", fb: "https://www.facebook.com/PoindexterForCongress" }
     ]},
   { state: "Nebraska", date: "2026-05-12", context: "Independent Senate bid in a red state", earlyVote: "~Apr 12", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "Dan Osborn", office: "US Senate (Independent)",
+      { name: "Dan Osborn", office: "US Senate (Independent)", result: "won", resultNote: "On the November ballot (independent)",
         web: "https://www.osbornforsenate.com/", x: "https://x.com/osbornforne", ig: "https://www.instagram.com/osbornforne/", tk: "https://www.tiktok.com/@osbornforne", fb: "https://www.facebook.com/osbornforne" }
     ]},
   { state: "Georgia", date: "2026-05-19", context: "Open seat in metro Atlanta", earlyVote: "Apr 27", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "Emanuel Jones", office: "US House, GA-13",
+      { name: "Emanuel Jones", office: "US House, GA-13", result: "lost",
         web: "https://www.emanueljonesforcongress.com/", x: "https://twitter.com/emanueldjones", fb: "https://www.facebook.com/emanuel.d.jones" }
     ]},
   { state: "Pennsylvania", date: "2026-05-19", context: "Major battleground with multiple contested primaries", earlyVote: "", mailIn: "Anyone can vote by mail (no early in-person)",
     candidates: [
-      { name: "Summer Lee", office: "US House, PA-12 (incumbent)",
+      { name: "Summer Lee", office: "US House, PA-12 (incumbent)", result: "won",
         web: "https://summerforpa.com/", x: "https://twitter.com/SummerForPA", ig: "https://www.instagram.com/summerleeforpa/", yt: "https://www.youtube.com/@repsummerlee", fb: "https://www.facebook.com/RepSummerLee" },
-      { name: "Paige Cognetti", office: "US House, PA-8",
+      { name: "Paige Cognetti", office: "US House, PA-8", result: "won",
         web: "https://paigeforpa.com/", x: "https://x.com/paigegcognetti", ig: "https://www.instagram.com/paigegcognetti/", fb: "https://www.facebook.com/PaigeCognetti" },
-      { name: "Bob Brooks", office: "US House, PA-7",
+      { name: "Bob Brooks", office: "US House, PA-7", result: "won",
         web: "https://brooksforcongress.com/", x: "https://x.com/VoteBobBrooks", fb: "https://www.facebook.com/VoteBobBrooks/" },
-      { name: "Jeff Warren", office: "State House, HD-137",
+      { name: "Jeff Warren", office: "State House, HD-137", result: "won",
         web: "https://www.jeffwarrenforpa.com/", ig: "https://www.instagram.com/jeffwarrenforpa/", tk: "https://www.tiktok.com/@jeffwarren4747", fb: "https://www.facebook.com/TheWarrenCampaign" },
-      { name: "Brian Wrightson", office: "State Senate, SD-40",
+      { name: "Brian Wrightson", office: "State Senate, SD-40", result: "won",
         web: "https://wrightsonforsenate.net/", x: "https://twitter.com/bwrightson", ig: "https://www.instagram.com/bwrightson/" }
     ]},
   { state: "California", date: "2026-06-02", context: "Marquee governor's race; top-two primary", earlyVote: "May 23", mailIn: "Auto-mailed to all voters",
     candidates: [
-      { name: "Tom Steyer", office: "Governor",
+      { name: "Tom Steyer", office: "Governor", result: "lost",
         web: "https://www.tomsteyer.com/", x: "https://x.com/TomSteyer", ig: "https://www.instagram.com/tomsteyer/", fb: "https://www.facebook.com/officialtomsteyer" },
-      { name: "Randy Villegas", office: "US House, CA-22",
+      { name: "Randy Villegas", office: "US House, CA-22", result: "won",
         web: "https://www.villegasforcongress.com/", x: "https://x.com/Villegas_CA22", ig: "https://www.instagram.com/villegasforcongress/", tk: "https://www.tiktok.com/@villegasforcongress", fb: "https://www.facebook.com/VillegasforCongress" },
-      { name: "Eric Jones", office: "US House, CA-4",
+      { name: "Eric Jones", office: "US House, CA-4", result: "won",
         web: "https://www.ericjones.us/", x: "https://x.com/ericjones_us", ig: "https://www.instagram.com/ericjones.us/", tk: "https://www.tiktok.com/@ericjones.us", yt: "https://www.youtube.com/@ericjones_us", fb: "https://www.facebook.com/ericjones.us/" },
-      { name: "Jane Kim", office: "Insurance Commissioner",
+      { name: "Jane Kim", office: "Insurance Commissioner", result: "won",
         web: "https://www.janekim.org/", x: "https://x.com/JaneKim", ig: "https://www.instagram.com/janekim/", tk: "https://www.tiktok.com/@janekimforca", fb: "https://www.facebook.com/JaneKimCA" }
     ]},
   { state: "Maine", date: "2026-06-09", context: "Open Senate seat opportunity", earlyVote: "~May 10", mailIn: "Anyone can vote by mail",
     candidates: [
-      { name: "Graham Platner", office: "US Senate",
+      { name: "Graham Platner", office: "US Senate", result: "won",
         web: "https://www.grahamforsenate.com", x: "https://x.com/grahamformaine", ig: "https://www.instagram.com/grahamformaine/", tk: "https://www.tiktok.com/@grahamformaine", yt: "https://www.youtube.com/@grahamformaine", fb: "https://www.facebook.com/grahamformaine" }
     ]},
   { state: "Washington, D.C.", date: "2026-06-16", context: "Race for DC's non-voting House delegate", earlyVote: "Jun 8", mailIn: "Auto-mailed to all voters",
@@ -672,12 +685,45 @@ const generalElection = {
   ]
 };
 
+// Poll-closing times (last polls to close in each state, 2026 dates — all during DST).
+// Stored as the real-world moment polls close, so the countdown is correct for every viewer.
+const POLL_CLOSE = {
+  "Mississippi":      { t: "19:00", off: "-05:00" }, // 7pm CT
+  "Illinois":         { t: "19:00", off: "-05:00" }, // 7pm CT
+  "Ohio":             { t: "19:30", off: "-04:00" }, // 7:30pm ET
+  "Nebraska":         { t: "20:00", off: "-05:00" }, // 8pm CT
+  "Georgia":          { t: "19:00", off: "-04:00" }, // 7pm ET
+  "Pennsylvania":     { t: "20:00", off: "-04:00" }, // 8pm ET
+  "California":       { t: "20:00", off: "-07:00" }, // 8pm PT
+  "Maine":            { t: "20:00", off: "-04:00" }, // 8pm ET
+  "Washington, D.C.": { t: "20:00", off: "-04:00" }, // 8pm ET
+  "Utah":             { t: "20:00", off: "-06:00" }, // 8pm MT
+  "New York":         { t: "21:00", off: "-04:00" }, // 9pm ET
+  "Colorado":         { t: "19:00", off: "-06:00" }, // 7pm MT
+  "Michigan":         { t: "20:00", off: "-04:00" }, // 8pm ET
+  "Tennessee":        { t: "20:00", off: "-04:00" }, // 8pm ET (East TN closes last)
+  "Wisconsin":        { t: "20:00", off: "-05:00" }, // 8pm CT
+  "Alaska":           { t: "20:00", off: "-08:00" }, // 8pm AKDT
+  "Florida":          { t: "20:00", off: "-04:00" }  // 8pm ET (panhandle closes 7pm CT = 8pm ET)
+};
+const GE_POLL_CLOSE = new Date("2026-11-03T20:00:00-05:00").getTime(); // General election, 8pm ET (EST)
+
+function pollCloseMs(p) {
+  const pc = POLL_CLOSE[p.state] || { t: "20:00", off: "-05:00" };
+  return new Date(`${p.date}T${pc.t}:00${pc.off}`).getTime();
+}
+function daysFromTs(ts, now) {
+  return Math.ceil((ts - now) / (1000 * 60 * 60 * 24));
+}
+
 // Group primaries by date
 function groupByDate(entries) {
   const groups = [], map = {};
   entries.forEach(p => {
-    if (!map[p.date]) { map[p.date] = { date: p.date, states: [] }; groups.push(map[p.date]); }
+    if (!map[p.date]) { map[p.date] = { date: p.date, states: [], pollCloseMs: 0 }; groups.push(map[p.date]); }
     map[p.date].states.push({ state: p.state, candidates: p.candidates, context: p.context, earlyVote: p.earlyVote, mailIn: p.mailIn });
+    const pc = pollCloseMs(p);
+    if (pc > map[p.date].pollCloseMs) map[p.date].pollCloseMs = pc; // group stays live until its last polls close
   });
   return groups;
 }
@@ -746,20 +792,14 @@ document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
   });
 })();
 
-function getTargetTime(dateStr) {
-  const utcMidnight = new Date(dateStr + "T00:00:00Z");
-  const tzMidnight = new Date(utcMidnight.toLocaleString("en-US", { timeZone: selectedTz }));
-  return utcMidnight.getTime() + (utcMidnight.getTime() - tzMidnight.getTime());
-}
-
 function formatDateShort(dateStr) {
   return new Date(dateStr + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
 function formatDateLong(dateStr) {
   return new Date(dateStr + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
-function getDaysRemaining(dateStr, now) {
-  return Math.ceil((getTargetTime(dateStr) - now) / (1000 * 60 * 60 * 24));
+function getDaysRemaining(ts, now) {
+  return daysFromTs(ts, now);
 }
 function getMonth(dateStr) {
   return new Date(dateStr + "T12:00:00Z").getUTCMonth();
@@ -875,8 +915,9 @@ function render() {
   const otherGroups = [];
 
   for (const g of primaryGroups) {
-    const days = getDaysRemaining(g.date, now);
-    if (!heroGroup && days > 0 && groupMatchesSearch(g) && groupMatchesRaceFilter(g) && groupHasVisibleCandidates(g)) {
+    const days = getDaysRemaining(g.pollCloseMs, now);
+    // A primary stays the hero until its last polls actually close (not midnight that morning).
+    if (!heroGroup && now < g.pollCloseMs && groupMatchesSearch(g) && groupMatchesRaceFilter(g) && groupHasVisibleCandidates(g)) {
       heroGroup = { ...g, days };
     } else {
       otherGroups.push({ ...g, days });
@@ -899,8 +940,9 @@ function render() {
   // Hero card
   if (heroGroup) {
     anyVisible = true;
-    const target = getTargetTime(heroGroup.date);
+    const target = heroGroup.pollCloseMs;
     const diff = Math.max(0, target - now);
+    const votingToday = diff <= 24 * 60 * 60 * 1000; // polls close within 24h
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
@@ -909,7 +951,8 @@ function render() {
     const elapsed = now - progressStart;
     const pct = Math.min(100, Math.max(0, (elapsed / totalSpan) * 100));
     const stateNames = heroGroup.states.map(s => s.state).join(", ");
-    const heroWeeks = weeksOutText(heroGroup.days);
+    const heroWeeks = votingToday ? "" : weeksOutText(heroGroup.days);
+    const heroDaysText = votingToday ? "Polls close today" : `${heroGroup.days} day${heroGroup.days !== 1 ? 's' : ''} away`;
 
     const heroStatesHtml = heroGroup.states.map(s => {
       const ctx = s.context ? `<div class="hero-context">${s.context}</div>` : "";
@@ -931,7 +974,7 @@ function render() {
             <div class="hero-state">${stateNames}</div>
             ${heroWeeks ? `<div class="hero-weeks">${heroWeeks}</div>` : ""}
           </div>
-          <div class="hero-date">${heroGroup.days} day${heroGroup.days !== 1 ? 's' : ''} away</div>
+          <div class="hero-date">${heroDaysText}</div>
         </div>
         ${heroStatesHtml}
         <div class="hero-countdown">
@@ -980,12 +1023,44 @@ function render() {
     return s;
   }
 
-  if (showEliminated) {
-    html += renderSection("Completed", passed);
+  // Completed primaries stay on the site — winner only (losing candidates drop off).
+  // A race whose polls have closed but whose result isn't recorded yet shows "Results pending".
+  function renderCompleted(groups) {
+    const sorted = groups.slice().sort((a, b) => b.pollCloseMs - a.pollCloseMs); // most recent first
+    const q = searchQuery.toLowerCase();
+    let cards = "", count = 0;
+    sorted.forEach(g => {
+      g.states.forEach(st => {
+        const anyResult = st.candidates.some(c => c.result);
+        let show = anyResult ? st.candidates.filter(c => c.result === "won") : st.candidates.slice();
+        if (raceFilter !== "all") show = show.filter(candidateMatchesRace);
+        if (show.length === 0) return; // our tracked candidate(s) lost -> nothing to show for this state
+        if (searchQuery && !(st.state.toLowerCase().includes(q) ||
+            show.some(c => c.name.toLowerCase().includes(q) || c.office.toLowerCase().includes(q)))) return;
+        const pending = !anyResult;
+        count++;
+        const candHtml = show.map(c => {
+          const note = c.resultNote ? `<span class="winner-note">${c.resultNote}</span>` : "";
+          const badge = pending
+            ? `<span class="result-pending">Results pending</span>`
+            : `<span class="result-won">&#10003; Won &middot; advancing to November</span>`;
+          return `<div class="candidate">${c.name} <span class="candidate-office">&mdash; ${c.office}</span>${renderLinks(c)}<div class="result-line">${badge}${note}</div></div>`;
+        }).join("");
+        cards += `<div class="card passed">` +
+          `<div class="card-date-header"><div class="card-date-text">${formatDateShort(g.date)}</div></div>` +
+          `<div class="card-state-group"><div class="card-state">${st.state}</div><div class="card-candidates">${candHtml}</div></div>` +
+          `<div class="card-bottom"><span class="passed-label">${pending ? "POLLS CLOSED" : "COMPLETE"}</span></div></div>`;
+      });
+    });
+    if (count === 0) return "";
+    anyVisible = true;
+    return `<div class="section"><div class="section-title">Completed <span class="section-count">${count} race${count !== 1 ? 's' : ''}</span></div><div class="card-grid">${cards}</div></div>`;
   }
+
   html += renderSection("This Month", thisMonth);
   html += renderSection("Upcoming", upcoming);
   html += renderSection("Later This Year", later);
+  html += renderCompleted(passed);
 
   // General Election
   const geMatch = !searchQuery ||
@@ -999,7 +1074,7 @@ function render() {
 
   if (geMatch && geRaceMatch) {
     anyVisible = true;
-    const geDays = getDaysRemaining(generalElection.date, now);
+    const geDays = getDaysRemaining(GE_POLL_CLOSE, now);
     const geWeeks = weeksOutText(geDays);
     const filteredGeCands = raceFilter === "all" ? generalElection.candidates : generalElection.candidates.filter(candidateMatchesRace);
     html += `
@@ -1075,14 +1150,19 @@ function updateMap() {
   primaries.forEach(p => {
     const abbr = STATE_ABBREV[p.state];
     if (!abbr) return;
-    const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
-    if (visibleCands.length === 0) return;
-    const days = getDaysRemaining(p.date, now);
-    if (days <= 0) return; // Skip completed primaries — winners show as general election
+    const pc = pollCloseMs(p);
+    const completed = now >= pc;
     let color;
-    if (days <= 30) color = "var(--map-imminent)";
-    else color = "var(--map-default)";
-
+    if (completed) {
+      // Completed: show "Won Primary" (purple) only if a tracked candidate advanced. Otherwise leave it off the map.
+      if (!p.candidates.some(c => c.result === "won")) return;
+      color = "var(--map-general)";
+    } else {
+      const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
+      if (visibleCands.length === 0) return;
+      const days = getDaysRemaining(pc, now);
+      color = days <= 30 ? "var(--map-imminent)" : "var(--map-default)";
+    }
     const el = mapSvg.getElementById(abbr);
     if (el) { el.style.fill = color; el.classList.add("tracked"); }
     // DC special handling
@@ -1112,14 +1192,22 @@ function getStateInfo(stateName) {
   // Check primaries
   for (const p of primaries) {
     if (p.state === stateName) {
-      const visibleCands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
-      if (visibleCands.length === 0) break;
-      const days = getDaysRemaining(p.date, Date.now());
+      const pc = pollCloseMs(p);
+      const completed = Date.now() >= pc;
+      let cands;
+      if (completed) {
+        const anyResult = p.candidates.some(c => c.result);
+        cands = anyResult ? p.candidates.filter(c => c.result === "won") : p.candidates;
+      } else {
+        cands = showEliminated ? p.candidates : p.candidates.filter(c => !c.eliminated);
+      }
+      if (cands.length === 0) break;
+      const days = getDaysRemaining(pc, Date.now());
       return {
         state: p.state,
         date: formatDateLong(p.date),
         days,
-        candidates: visibleCands.length,
+        candidates: cands.length,
         type: "primary"
       };
     }
@@ -1127,7 +1215,7 @@ function getStateInfo(stateName) {
   // Check general election
   for (const c of generalElection.candidates) {
     if (c.state === stateName) {
-      const days = getDaysRemaining(generalElection.date, Date.now());
+      const days = getDaysRemaining(GE_POLL_CLOSE, Date.now());
       const geCands = generalElection.candidates.filter(gc => gc.state === stateName);
       return {
         state: stateName,
