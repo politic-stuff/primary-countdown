@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Primary Countdown">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#3b82f6"/>
-      <stop offset="1" stop-color="#2563eb"/>
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
-  <path d="M17 33.5 L27.5 44 L48 21.5" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="64" height="64" rx="14" fill="#2563eb"/>
+  <rect x="28" y="10" width="8" height="5" rx="2" fill="#ffffff"/>
+  <rect x="30" y="14" width="4" height="4" fill="#ffffff"/>
+  <circle cx="32" cy="38" r="16" fill="none" stroke="#ffffff" stroke-width="4.5"/>
+  <line x1="32" y1="38" x2="40" y2="30" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="32" cy="38" r="2.6" fill="#ffffff"/>
 </svg>
