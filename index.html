@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FIGHT 2026 Democratic Primary Countdowns</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#2563eb">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
@@ -615,6 +618,11 @@ const primaries = [
       { name: "Robert White", office: "US House Delegate",
         web: "https://www.joinrobertwhite.com/", x: "https://twitter.com/robertwhite_dc", ig: "https://www.instagram.com/robertwhite_dc/", fb: "https://www.facebook.com/RobertWhiteAtLarge" }
     ]},
+  { state: "Oklahoma", date: "2026-06-16", context: "Bernie-endorsed challenger in OK-5", earlyVote: "Jun 11", mailIn: "Anyone can vote absentee by mail",
+    candidates: [
+      { name: "Trey Martin", office: "US House, OK-5",
+        web: "https://www.treyforoklahoma.com/", x: "https://x.com/treyforoklahoma", ig: "https://www.instagram.com/treyforoklahoma", tk: "https://www.tiktok.com/@treyforoklahoma", fb: "https://www.facebook.com/treyforoklahoma" }
+    ]},
   { state: "Utah", date: "2026-06-23", context: "Blue candidate in a deep-red state", earlyVote: "Jun 9", mailIn: "All-mail state",
     candidates: [
       { name: "Nate Blouin", office: "US House, UT-1",
@@ -697,6 +705,7 @@ const POLL_CLOSE = {
   "California":       { t: "20:00", off: "-07:00" }, // 8pm PT
   "Maine":            { t: "20:00", off: "-04:00" }, // 8pm ET
   "Washington, D.C.": { t: "20:00", off: "-04:00" }, // 8pm ET
+  "Oklahoma":         { t: "19:00", off: "-05:00" }, // 7pm CT
   "Utah":             { t: "20:00", off: "-06:00" }, // 8pm MT
   "New York":         { t: "21:00", off: "-04:00" }, // 9pm ET
   "Colorado":         { t: "19:00", off: "-06:00" }, // 7pm MT
@@ -1127,7 +1136,7 @@ const STATE_ABBREV = {
   "Georgia": "GA", "Pennsylvania": "PA", "California": "CA", "Maine": "ME",
   "Washington, D.C.": "DC", "Utah": "UT", "New York": "NY", "Colorado": "CO",
   "Michigan": "MI", "Tennessee": "TN", "Wisconsin": "WI", "Alaska": "AK",
-  "Florida": "FL", "New Jersey": "NJ", "Texas": "TX"
+  "Florida": "FL", "New Jersey": "NJ", "Texas": "TX", "Oklahoma": "OK"
 };
 
 const mapTooltip = document.getElementById("map-tooltip");
